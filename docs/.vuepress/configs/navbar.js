@@ -1,7 +1,7 @@
 export default [
-  { text: '文档', link: '/guide/' },
+  { text: '文档', link: '/api/' },
   {
     text: '更新日志',
-    link: 'https://github.com/xinlei3166/vuepress-demo',
+    link: 'https://github.com/WangXueLinA/general_antd_component/commit/main',
   },
 ]
