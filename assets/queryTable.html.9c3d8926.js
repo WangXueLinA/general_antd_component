@@ -1,1 +1,0 @@
-const e=JSON.parse('{"key":"v-6e05e325","path":"/api/queryTable.html","title":"QueryTable","lang":"en-US","frontmatter":{},"excerpt":"","headers":[],"git":{"updatedTime":1754932896000,"contributors":[{"name":"wxl","email":"xuelinw1125@gmail.com","commits":1}]},"filePathRelative":"api/queryTable.md"}');export{e as data};
