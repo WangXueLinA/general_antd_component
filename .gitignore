@@ -1,24 +1,36 @@
-.DS_Store
-node_modules
-dist
-.cache
-.temp
+# Node.js dependencies
+node_modules/
 
-# local env files
-.env.local
-.env.*.local
+# VitePress cache and build outputs
+.vitepress/cache/
+docs/.vitepress/cache/
+.vitepress/dist/
+docs/.vitepress/dist/
 
-# Log files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-# Editor directories and files
-.fleet
-.idea
-.vscode
+# IDE/Editor configurations
+.idea/
+# .vscode/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Logs and databases
+*.log
+*.sqlite
+
+# OS generated files
+Thumbs.db
+.DS_Store
+Icon
+
+# TypeScript compiler output
+*.tsbuildinfo

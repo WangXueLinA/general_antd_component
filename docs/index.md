@@ -1,26 +1,33 @@
 ---
-home: true
-heroImage: /logo.png
-actions:
-  - text: Get Started
-    link: /guide/
-    type: primary
-  - text: Learn More
-    link: /guide/
-    type: secondary
+layout: home
+
+hero:
+  name: "general_component"
+  text: "基于 Ant Design of Vue 的二次封装的 Form跟Table，灵活的json配置提高开发效率"
+  # tagline: My great project tagline
+  image:
+    src: /logo.webp
+    alt: VitePress中文网
+  actions:
+    # - theme: brand
+    #   text: Markdown Examples
+    #   link: /markdown-examples
+    - theme: brand
+      text: 快速上手 →
+      link: /examples/JsonForm/
 
 features:
-  - title: 💡 Instant Server Start
-    details: On demand file serving over native ESM, no bundling required!
-  - title: ⚡️ Lightning Fast HMR
-    details: Hot Module Replacement (HMR) that stays fast regardless of app size.
-  - title: 🛠️ Rich Features
-    details: Out-of-the-box support for TypeScript, JSX, CSS and more.
-  - title: 📦 Optimized Build
-    details: Pre-configured Rollup build with multi-page and library mode support.
-  - title: 🔩 Universal Plugins
-    details: Rollup-superset plugin interface shared between dev and build.
-  - title: 🔑 Fully Typed APIs
-    details: Flexible programmatic APIs with full TypeScript typing.
-footer: MIT Licensed | Copyright © 2021-present 学麟
+  - icon: 📝
+    title: 简洁至上
+    details: 以 Ant Design of Vue 的Form表单和Table表格为基础进行二次封装，增强功能加少代码量
+  - icon: 🚀
+    title: 配置简单
+    details: 使用原有Ant Design of Vue 的Form表单和Table表格的参数及事件。
+  - icon: 🛠️  
+    title: API全部支持
+    details: 支持所有的事件及参数
+  - icon: <svg xmlns="http://www.w3.org/2000/svg" width="30" viewBox="0 0 256 220.8"><path fill="#41B883" d="M204.8 0H256L128 220.8 0 0h97.92L128 51.2 157.44 0h47.36Z"/><path fill="#41B883" d="m0 0 128 220.8L256 0h-51.2L128 132.48 50.56 0H0Z"/><path fill="#35495E" d="M50.56 0 128 133.12 204.8 0h-47.36L128 51.2 97.92 0H50.56Z"/></svg>
+
+footer: MIT Licensed | Copyright © 2018-present 学麟
 ---
+

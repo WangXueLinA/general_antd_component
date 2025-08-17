@@ -1,16 +1,66 @@
 # JsonForm
 
+<script setup>
+import Demo from './Demo.vue'
+import Demo1 from './Demo1.vue'
+import Demo2 from './Demo2.vue'
+import Demo3 from './Demo3.vue'
+
+</script>
+
+## 基础用法
+
+通过提前注入表单组件，即可实现表单的渲染
+
+<div style="border: 1px solid #eee; padding: 20px"><Demo></Demo></div>
+
+::: details 查看代码
+<<< ./Demo.vue
+:::
+
+## 自定义表单
+
+支持自定义表单，通过`h`函数来创建表单节点
+
+<div style="border: 1px solid #eee; padding: 20px"><Demo1></Demo1></div>
+
+::: details 查看代码
+<<< ./Demo1.vue
+:::
+
+## 异步获取表单数据
+
+表单组件（如 Select、TreeSelect、CheckboxGroup、RadioGroup）支持通`options`属性直接配置渲染数据；新增`getOptions`异步方法，可动态获取并加载表单数据，灵活适配需要远程请求的场景。需返回一个 Promise 对象，格式为：`{ label: string, value: string | number }[]`
+
+<div style="border: 1px solid #eee; padding: 20px"><Demo2></Demo2></div>
+
+::: details 查看代码
+<<< ./Demo2.vue
+:::
+
+## 布局
+
+
+<div style="border: 1px solid #eee; padding: 20px"><Demo3></Demo3></div>
+
+::: details 查看代码
+<<< ./Demo3.vue
+:::
+
+## API
+
 | 参数名                    | 类型       | 默认值 | 说明                                             |
 | ------------------------- | ---------- | ------ | ------------------------------------------------ |
-| formColumns               | FormItem[] | 无     | 表单列配置数组                                   |
+| columns               | FormItem[] | 无     | 表单列配置数组                                   |
 | span                      | number     | 无     | a-col 组件的 span 属性，用于控制表单项的布局个数 |
 | 其余参数同 antd form 一样 | ---        | ---    | 参考 antd form                                   |
 
-## formColumns 参数
+
+### columns 参数
 
 | 参数名         | 类型                | 说明                                                                                                                   |
 | -------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| el             | string \| Function  | 表单项使用的组件名称（在 registerForm 文件中查看枚举）或自定义组件函数或 h 函数生成组件                                |
+| el             | string | Function  | 表单项使用的组件名称（在 registerForm 文件中查看枚举）或自定义组件函数或 h 函数生成组件                                |
 | label          | string              | 表单项的标签文本                                                                                                       |
 | field          | string              | 同表单绑定的 v-model:value 或者 v-model:checked                                                                        |
 | formItemProps  | Record<string, any> | ant-design-vue 中 FormItem 的额外属性，如验证规则等                                                                    |

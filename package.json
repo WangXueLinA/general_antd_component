@@ -7,36 +7,34 @@
     "type": "git",
     "url": "https://github.com/WangXueLinA/WangXueLinA.github.io/general_antd_component"
   },
-  "main": "index.js",
+  "keywords": [
+    "antd-vue",
+    "vitepress",
+    "vue3",
+    "二次封装组件",
+    "易用性组件",
+    "JsonForm",
+    "QueryTable"
+  ],
   "scripts": {
-    "dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
-    "deploy": "gh-pages -d docs/.vuepress/dist -r https://github.com/WangXueLinA/general_antd_component.git -b gh-pages"
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "deploy": "gh-pages -d docs/.vitepress/dist -r https://github.com/WangXueLinA/general_antd_component.git -b gh-pages"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "@vuepress/plugin-register-components": "2.0.0-beta.51",
-    "@vuepress/plugin-search": "2.0.0-beta.51",
-    "@vuepress/plugin-shiki": "2.0.0-beta.51",
-    "@vuepress/client": "2.0.0-beta.51",
-    "@vuepress/utils": "2.0.0-beta.51",
-    "@vuepress/plugin-pwa": "2.0.0-beta.51",
-    "@vuepress/plugin-pwa-popup": "2.0.0-beta.51",
-    "vuepress": "2.0.0-beta.51",
-    "less": "^4.1.2",
-    "prettier": "^2.2.1",
-    "gh-pages": "^6.3.0",
-    "vite": "^3.2.0"
+    "sass": "^1.90.0",
+    "vitepress": "^1.6.4",
+    "gh-pages": "^6.3.0"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@vitejs/plugin-vue-jsx": "^4.2.0",
+    "@vue/compiler-sfc": "^3.5.18",
     "ant-design-vue": "^4.2.6",
-    "vue": "^3.5.18",
-    "vuepress-plugin-demoblock-plus": "^2.0.4"
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "typescript": "^5.9.2",
+    "unplugin-vue-components": "^29.0.0",
+    "vite": "^6.3.5",
+    "vue": "^3.5.18"
   }
 }
