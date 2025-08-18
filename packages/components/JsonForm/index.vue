@@ -1,6 +1,6 @@
 <template>
   <a-form ref="formRef" :model="modelValue" v-bind="formProps">
-    <a-row>
+    <a-row :gutter="formProps.layout === 'inline' ? [0, 24] : undefined">
       <a-col :span="item.span || props.span" v-for="item in formItems" :key="item.field">
         <a-form-item
           :name="item.field"
@@ -134,7 +134,7 @@ const resetFields = (isInit = true) => {
     formInstance.value?.clearValidate()
   } else {
     formInstance.value?.clearValidate()
-    formInstance.value?.resetFields()
+    formInstance.value?.resetFields()    
   }
 }
 

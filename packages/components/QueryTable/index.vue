@@ -5,7 +5,7 @@
       <a-button
         v-for="button in topActionButtons"
         :key="button?.key || button.label"
-        class="common-btn"
+        class="common-btn query-topButton"
         v-bind="mergeProps(button)"
       >
         {{ button.label }}
@@ -43,7 +43,7 @@
         v-for="action in bottomActionButtons"
         :key="action.key || action.label"
         v-bind="mergeProps(action)"
-        class="common-btn"
+        class="common-btn query-bottomButton"
       >
         {{ action.label }}
       </a-button>
@@ -83,7 +83,7 @@ import {
   mergeProps,
   useTemplateRef
 } from 'vue'
-import type { TablePaginationConfig, TableProps } from 'ant-design-vue'
+import { message, type TablePaginationConfig, type TableProps } from 'ant-design-vue'
 import type { QueryTableProps } from './types'
 
 // 定义props
@@ -157,8 +157,8 @@ const formBindings = computed(() => {
   const { columns, defaultData, ...rest } = props.formProps
   return {
     layout: formLayout.value,
-    labelCol: { style: { width: '120px' } },
-    wrapperCol: { style: { width: '260px' } },
+    labelCol: { style: { width: '70px' } },
+    // wrapperCol: { style: { width: '260px' } },
     ...rest,
   }
 })
@@ -180,21 +180,24 @@ const shouldShowPagination = computed(
 
 // 格式化请求参数
 const formatRequestParams = (params: Record<string, any>) => {
-  // 提取分页参数，不暴露出pageNum跟pageSize
-  const { current, size, ...businessParams } = params
+  // 提取分页参数，不暴露出current跟pageSize
+  const { current, pageSize, ...businessParams } = params
 
   // 调用提供的 formatParams 时，只传递业务参数
   const formattedBusinessParams = props?.formatParams({
     ...formData.value,
     ...businessParams,
+    // ...params
   })
+
+  message.info(JSON.stringify(formattedBusinessParams))
 
   // 将分页参数和格式化后的业务参数合并
   return {
     ...props.formProps.defaultData, // 只适用于第一层，不适用于嵌套
     ...formattedBusinessParams,
-    current,
-    size,
+    // current,
+    // pageSize,
   }
 }
 
@@ -213,13 +216,13 @@ const loadData = async (params: Record<string, any> = {}) => {
         params.current !== undefined
           ? params.current
           : state.pagination.current,
-      size: params.size !== undefined ? params.size : state.pagination.pageSize,
+      pageSize: params.pageSize !== undefined ? params.pageSize : state.pagination.pageSize,
     }
 
     // 更新分页状态
     updatePagination({
       current: pageParams.current,
-      pageSize: pageParams.size,
+      pageSize: pageParams.pageSize,
     })
 
     // 格式化请求参数
@@ -267,7 +270,7 @@ const handleReset = () => {
   })
 
   // 重新加载数据
-  loadData({ current: 1, size: 10 })
+  loadData({ current: 1, pageSize: 10 })
 }
 
 // 处理表格变化
@@ -278,7 +281,7 @@ const handleTableChange: TableProps['onChange'] = (
 ) => {
   const params = {
     current: pagination.current,
-    size: pagination.pageSize,
+    pageSize: pagination.pageSize,
   }
 
   // 处理排序
@@ -311,5 +314,11 @@ defineExpose({
 <style scoped>
 .common-btn {
   margin-right: 25px;
+}
+.query-topButton{
+  margin-bottom: 20px;
+}
+.query-bottomButton{
+  margin-top: 20px;
 }
 </style>

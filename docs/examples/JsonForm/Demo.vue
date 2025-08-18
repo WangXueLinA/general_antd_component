@@ -22,6 +22,7 @@ const rules = {
   projectName: [{ required: true, message: '请输入项目名称' }],
   toPdt: [{ required: true, message: '请选择地区' }],
 }
+
 const columns = ref([
   {
     label: '项目名称',
@@ -112,14 +113,12 @@ const columns = ref([
       { label: '进行中', value: 1 },
       { label: '已完成', value: 2 },
       { label: '已取消', value: 3 },
-
     ],
   },
   {
     label: '项目类型',
     field: 'projectType',
     el: 'CheckboxGroup',
-
     options: [
       { label: '服务', value: 'service' },
       { label: '咨询', value: 'consulting' },

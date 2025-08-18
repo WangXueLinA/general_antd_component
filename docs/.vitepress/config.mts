@@ -6,12 +6,11 @@ export default defineConfig({
   title: "general_component",
   description: "A VitePress Site",
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
+    logo: '/logo.webp',
     nav: [
       { text: '首页', link: '/' },
       { text: '组件', link: '/examples/JsonForm' }
     ],
-
     sidebar: [
       {
         text: '组件',
@@ -24,6 +23,26 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/WangXueLinA/general_antd_component' }
     ],
-    lastUpdatedText: '上次更新',
-  }
+    lastUpdated: {
+      text: '最后更新于',
+      formatOptions: {
+        dateStyle: 'short',
+        timeStyle: 'medium'
+      }
+    },
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 学麟'
+    },
+    search: {
+      provider: "local",
+    },
+    docFooter: {
+      prev: '上一页',
+      next: '下一页'
+    },
+  },
+  markdown: {
+    lineNumbers: true,
+  },
 })

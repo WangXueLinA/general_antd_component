@@ -3,6 +3,7 @@ import DefaultTheme from 'vitepress/theme'
 import Components from '../../../packages/index'
 import 'ant-design-vue/dist/reset.css'
 import './style/index.css'
+import './custom.css'
 
 export default {
   ...DefaultTheme,

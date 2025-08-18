@@ -22,7 +22,7 @@
   </JsonForm>
 </template>
 <script setup>
-import { h, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 const layout = ref('horizontal')
 const disabled = ref(false)
 const col = ref(1)

@@ -1,64 +1,32 @@
-/** 
-  主题变量样式修改
-**/
+/* 该文件配置网站的文字  图标 等等 一系列dom元素的样式文件 */
 :root {
- /* 按钮颜色 */
- --vp-button-brand-bg: var(--vp-c-brand);
- /* 首页标题和图片渐变颜色 */
- --vp-home-hero-name-color: transparent;
- --vp-home-hero-name-background: -webkit-linear-gradient( 120deg, var(--vp-c-brand) 45%, var(--vp-c-brand-next) );
- --vp-home-hero-image-background-image: linear-gradient( -45deg, var(--vp-c-brand) 45%, var(--vp-c-brand-next) );
- --vp-home-hero-image-filter: blur(180px);
+  /* 标题 */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient( 135deg, #F6CEEC 10%, #D939CD 100%);
+  
+  /* 图标背景 */
+  --vp-home-hero-image-background-image: linear-gradient( 135deg, #F6CEEC 10%, #D939CD 100%);
+  --vp-home-hero-image-filter: blur(150px);
 
-}
- 
-/** 
-  顶部导航模块样式修改
-**/
-.VPNav {
-  .VPNavBar {
-    background-color: #fff;
-    border-bottom: 1px solid rgba(60, 60, 67, 0.13);
-  }
-  .VPNavBar.has-sidebar{
-    .curtain {
-      bottom: -30px !important;
-      /* 导航的底部边框不显示问题修改 */
-      &::before {
-        margin-top: 2px !important;
-      }
-    }
-  }
-  .logo {
-    height: 40px;
-  }
-}
- 
-/**
-  内容模块样式修改
-**/
- 
-.VPContent {
-  .VPDoc {
-    padding-left: 0 !important;
-  }
-  /* 内容左边距调整 */
-  .content-container {
-    margin-left: 20px !important;
-  }
-  /* 副标题样式修改 */
-  .container .text {
-    font-size: 46px !important;
-  }
-}
- 
- 
-/**
-  暗黑模式样式修改
-**/
-.dark {
-  .VPNav .VPNavBar {
-    background-color: #1e1e20;
-    border-bottom: 1px solid #000;
-  }
+  /* botton按钮 */
+  /* --vp-button-brand-border: #81634b; */
+  /* 按钮文本颜色 */
+  --vp-button-brand-text: #ffffff;
+  /* 按钮背景颜色 */
+  --vp-button-brand-bg: #D939CD;
+
+/*#00FFEE*/
+  /* 鼠标悬停的效果之后的样式 */
+  --vp-button-brand-hover-border: #bd34fe;
+  --vp-button-brand-hover-text: #fff;
+  --vp-button-brand-hover-bg: #bd34fe;
+
+  --vp-button-brand-active-border: #bd34fe;
+
+  /* 主题基色 */
+  --vp-c-brand: #bd34fe;
+  /* 白色模式 主题基色 */
+  --vp-c-brand-light: #bd34fe;
+  /* 黑色模式 主题基色 */
+  --vp-c-brand-dark: #bd34fe;
 }
