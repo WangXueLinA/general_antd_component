@@ -4,7 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   base: '/general_antd_component/',
   title: "general_component",
-  description: "A VitePress Site",
+  description: "antd vue组件的form跟table进行二次封装，支持json配置",
   themeConfig: {
     logo: '/logo.webp',
     nav: [
