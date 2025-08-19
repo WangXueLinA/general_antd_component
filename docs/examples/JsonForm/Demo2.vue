@@ -8,11 +8,11 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 const formData = ref({})
 
-const columns = ref([
+const columns = reactive([
   {
     label: '项目地址',
     field: 'name',
@@ -40,7 +40,6 @@ const columns = ref([
     el: 'RadioGroup',
     value: computed(() => formData.value.sex || 'female'),
     onChange: (e) => {
-      console.log('性别变化:', e.target.value)
       formData.value.sex = e.target.value
     },
     getOptions: () => Promise.resolve([

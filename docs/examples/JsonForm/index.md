@@ -5,12 +5,12 @@ import Demo from './Demo.vue'
 import Demo1 from './Demo1.vue'
 import Demo2 from './Demo2.vue'
 import Demo3 from './Demo3.vue'
-
+import Demo4 from './Demo4.vue'
 </script>
 
 ## 基础用法
 
-通过提前注入表单组件，即可实现表单的渲染
+通过注入已有的表单组件，即可实现表单的渲染，如需增加其他表单组件，可在`registerForm`文件中进行增加
 
 <div style="border: 1px solid #eee; padding: 20px"><Demo></Demo></div>
 
@@ -38,6 +38,16 @@ import Demo3 from './Demo3.vue'
 <<< ./Demo2.vue
 :::
 
+## 内置详情Text及日期Time组件
+
+内置详情Text组件，可以使表单支持编辑跟详情使用一套代码逻辑，时间格式表单详情为Time，极大简化代码量
+
+<div style="border: 1px solid #eee; padding: 20px"><Demo4></Demo4></div>
+
+::: details 查看代码
+<<< ./Demo4.vue
+:::
+
 ## 布局
 
 
@@ -60,14 +70,13 @@ import Demo3 from './Demo3.vue'
 
 | 参数名         | 类型                | 说明                                                                                                                   |
 | -------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| el             | string | Function  | 表单项使用的组件名称（在 registerForm 文件中查看枚举）或自定义组件函数或 h 函数生成组件                                |
+| el             | **string \| Function**  | 表单项使用的组件名称（在 registerForm 文件中查看枚举）或自定义组件函数或 h 函数生成组件                                |
 | label          | string              | 表单项的标签文本                                                                                                       |
 | field          | string              | 同表单绑定的 v-model:value 或者 v-model:checked                                                                        |
-| formItemProps  | Record<string, any> | ant-design-vue 中 FormItem 的额外属性，如验证规则等                                                                    |
 | value          | any                 | 表单项的默认值                                                                                                         |
 | isShow         | boolean             | 表单项的显示隐藏                                                                                                       |
-| getOptions     | Promise.resolve     | 表单项有 options 配置的可以通过 getOptions 函数异步拿取 options 并将数据 return 为 Array<{label：显示标题, value：值}> |
-| 剩余表单 props | any                 | 表单独有的配置可直接通过直接配置会作用到表单项上                                                                       |
+| getOptions     | Promise.resolve     | 表单项有 options 配置的可以通过 getOptions 函数异步拿取 options 并将数据 return 为 Array<{label：'显示标题', value：'值'}> |
+| 剩余表单 props | any                 | 表单项各自的属性的配置可直接作用到表单项上                                                                       |
 
 引入组件可以通过 import 来导入，或者内部的 hook 方式引入组件，抛出的实例可根据业务进行自己增加或者修改
 

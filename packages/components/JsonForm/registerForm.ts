@@ -10,6 +10,7 @@ import {
   TreeSelect,
 } from 'ant-design-vue'
 import Text from './components/text.vue'
+import Time from './components/time.vue'
 const { RangePicker } = DatePicker
 const RadioGroup = Radio.Group
 const CheckboxGroup = Checkbox.Group
@@ -138,6 +139,7 @@ const extendComponentsOptions = (Component: Component, config?: any) => {
 
 export const componentsMap = {
   Text,
+  Time,
   Textarea,
   InputNumber,
   DatePicker,
