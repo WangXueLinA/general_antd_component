@@ -17,7 +17,10 @@ export default defineConfig({
         text: '组件',
         items: [
           { text: 'JsonForm', link: '/examples/JsonForm' },
-          { text: 'QueryTable', link: '/examples/QueryTable' }
+          { text: 'QueryTable', link: '/examples/QueryTable' },
+          { text: 'WangEditor', link: '/examples/WangEditor' },
+          { text: 'CopyButton', link: '/examples/CopyButton' },
+          { text: 'ECharts', link: '/examples/ECharts' },
         ]
       }
     ],

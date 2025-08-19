@@ -1,4 +1,4 @@
-# QueryTable
+# QueryTable： 表单查询
 
 <script setup>
 import Demo from './Demo.vue'
