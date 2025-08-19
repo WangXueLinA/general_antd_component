@@ -7,7 +7,7 @@ import Demo from './Demo.vue'
 
 ## 基础用法
 
-通过json配置实现表单查询显示table列表
+通过json配置实现表单查询显示table列表，无需关注分页等逻辑，组件内部会自动处理
 
 <div style="border: 1px solid #eee; padding: 20px"><Demo></Demo></div>
 

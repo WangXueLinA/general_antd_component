@@ -10,7 +10,7 @@ import Demo3 from './Demo3.vue'
 
 ## 基础用法
 
-通过提前注入表单组件，即可实现表单的渲染
+通过注入已有的表单组件，即可实现表单的渲染，如需增加其他表单组件，可在`registerForm`文件中进行增加
 
 <div style="border: 1px solid #eee; padding: 20px"><Demo></Demo></div>
 

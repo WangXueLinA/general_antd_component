@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "general_component"
   # text: "基于 Ant Design of Vue 的二次封装的 Form跟Table，灵活的json配置提高开发效率"
-  tagline: '基于 Ant Design of Vue 的二次封装的 Form跟Table，灵活的json配置提高开发效率'
+  tagline: '基于 Ant Design of Vue 的二次封装的 Form跟搜索Table，灵活的json配置提高开发效率'
   image:
     src: /logo.webp
     alt: VitePress中文网
