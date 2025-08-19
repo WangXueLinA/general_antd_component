@@ -4,6 +4,10 @@ import Components from '../../../packages/index'
 import 'ant-design-vue/dist/reset.css'
 import './style/index.css'
 import './custom.css'
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+
+dayjs.locale('zh-cn');
 
 export default {
   ...DefaultTheme,

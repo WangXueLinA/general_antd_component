@@ -5,7 +5,7 @@ import Demo from './Demo.vue'
 import Demo1 from './Demo1.vue'
 import Demo2 from './Demo2.vue'
 import Demo3 from './Demo3.vue'
-
+import Demo4 from './Demo4.vue'
 </script>
 
 ## 基础用法
@@ -36,6 +36,16 @@ import Demo3 from './Demo3.vue'
 
 ::: details 查看代码
 <<< ./Demo2.vue
+:::
+
+## 内置详情Text及日期Time组件
+
+内置详情Text组件，可以使表单支持编辑跟详情使用一套代码逻辑，时间格式表单详情为Time，极大简化代码量
+
+<div style="border: 1px solid #eee; padding: 20px"><Demo4></Demo4></div>
+
+::: details 查看代码
+<<< ./Demo4.vue
 :::
 
 ## 布局
