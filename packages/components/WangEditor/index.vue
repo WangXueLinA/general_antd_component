@@ -20,9 +20,16 @@
 
 <script setup lang="ts">
 import "@wangeditor-next/editor/dist/css/style.css";
-import { Toolbar, Editor } from "@wangeditor-next/editor-for-vue";
 import { IToolbarConfig, IEditorConfig } from "@wangeditor-next/editor";
 import { ref, shallowRef, onBeforeUnmount } from "vue";
+let Editor =ref()
+
+let Toolbar =ref()
+
+import("@wangeditor-next/editor-for-vue").then((WangEditor) => {
+  Editor.value = WangEditor.Editor;
+  Toolbar.value = WangEditor.Toolbar;
+});
 
 // 文件上传 API
 // import FileAPI from "@/api/file";

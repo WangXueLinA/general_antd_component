@@ -17,9 +17,8 @@ export default defineConfig({
         items: [
           { text: 'JsonForm', link: '/examples/JsonForm' },
           { text: 'QueryTable', link: '/examples/QueryTable' },
-          { text: 'WangEditor', link: '/examples/WangEditor' },
           { text: 'CopyButton', link: '/examples/CopyButton' },
-          { text: 'ECharts', link: '/examples/ECharts' },
+          { text: 'Operation', link: '/examples/Operation' }
         ]
       }
     ],

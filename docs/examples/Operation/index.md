@@ -1,4 +1,4 @@
-# WangEditor： 富文本编辑器
+# Operation： 操作分割显示更多
 
 <script setup>
 import Demo from './Demo.vue'

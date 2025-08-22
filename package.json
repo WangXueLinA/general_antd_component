@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "private": true,
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/WangXueLinA/WangXueLinA.github.io/general_antd_component"
@@ -23,6 +24,7 @@
     "deploy": "gh-pages -d docs/.vitepress/dist -r https://github.com/WangXueLinA/general_antd_component.git -b gh-pages"
   },
   "devDependencies": {
+    "@types/node": "^24.3.0",
     "gh-pages": "^6.3.0",
     "sass": "^1.90.0",
     "vitepress": "^1.6.4"
@@ -34,8 +36,8 @@
     "@wangeditor-next/editor": "^5.6.31",
     "@wangeditor-next/editor-for-vue": "^5.1.14",
     "ant-design-vue": "^4.2.6",
-    "echarts": "^5.6.0",
     "dayjs": "^1.11.13",
+    "echarts": "^5.6.0",
     "typescript": "^5.9.2",
     "unplugin-vue-components": "^29.0.0",
     "vite": "^6.3.5",

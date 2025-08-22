@@ -5,13 +5,15 @@ import QueryTable from './components/QueryTable/index.vue'
 import WangEditor from './components/WangEditor/index.vue'
 import CopyButton from './components/CopyButton/index.vue'
 import Echarts from './components/Echarts/index.vue'
+import Operation from './components/Operation/index.vue'
 
 const components = {
   JsonForm,
   QueryTable,
   WangEditor,
   CopyButton,
-  Echarts
+  Echarts,
+  Operation
 }
 
 const obj = {

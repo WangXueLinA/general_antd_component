@@ -14,7 +14,7 @@ import { GridComponent, TooltipComponent, LegendComponent } from "echarts/compon
 import { CanvasRenderer } from "echarts/renderers";
 import { ref, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
 
-import { useResizeObserver } from 'vue-hooks-plus'
+// import { useResizeObserver } from 'vue-hooks-plus'
 
 // 按需注册组件
 echarts.use([
@@ -63,9 +63,9 @@ const initChart = () => {
 };
 
 // 监听尺寸变化，自动调整
-useResizeObserver(chartRef, () => {
-  chartInstance?.resize();
-});
+// useResizeObserver(chartRef, () => {
+//   chartInstance?.resize();
+// });
 
 // 监听 options 变化，更新图表
 watch(
