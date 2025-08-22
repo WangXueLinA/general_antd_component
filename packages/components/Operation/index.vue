@@ -33,8 +33,6 @@ const visible = ref(false);
 
 const getSlotButtons = () => {
   const slotContent = slots.default?.() || [];
-
-  console.log(slotContent, '12131');
   
   return slotContent.filter(item => {
     if (!item) return false;
