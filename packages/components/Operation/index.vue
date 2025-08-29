@@ -19,11 +19,6 @@ const props = defineProps({
   limit: {
     type: Number,
     default: 3
-  },
-
-  size: {
-    type: String,
-    default: 'middle'
   }
 });
 

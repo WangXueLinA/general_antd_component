@@ -9,6 +9,9 @@ import Demo4 from './Demo4.vue'
 import Demo5 from './Demo5.vue'
 </script>
 
+## 介绍
+JsonForm 是基于 ant-design-vue 的表单组件，通过 json 配置实现表单的渲染，组件内置的表单都是基于ant-design-vue 的表单组件，有Input、TextArea、InputNumber、Select、Radio、RadioGroup、Checkbox、CheckboxGroup、DatePicker、RangePicker、Switch、TreeSelect及详情的Text跟Time 组件
+
 ## 基础用法
 
 通过注入已有的表单组件，即可实现表单的渲染，如需增加其他表单组件，可在`registerForm`文件中进行增加
