@@ -16,7 +16,12 @@ import { Button, Modal } from 'ant-design-vue'
 const [modal, contextHolder] = Modal.useModal();
 const formRef = useTemplateRef('formRef')
 
-const formData = ref({})
+const formData = ref({
+  projectNum: 1,
+  toPdt: 'beijing',
+  switch: true,
+  projectStatus: 'doing'
+})
 
 const rules = {
   projectName: [{ required: true, message: '请输入项目名称' }],
@@ -104,15 +109,10 @@ const columns = ref([
     label: '项目状态',
     field: 'projectStatus',
     el: 'RadioGroup',
-    // TODO: 文档框架对RadioGroup的监听无效，正常不需要监听value
-    value: computed(() => formData.value.projectStatus || 1),
-    onChange: (e) => {
-      formData.value.projectStatus = e.target.value || undefined
-    },
     options: [
-      { label: '进行中', value: 1 },
-      { label: '已完成', value: 2 },
-      { label: '已取消', value: 3 },
+      { label: '进行中', value: 'doing' },
+      { label: '已完成', value: 'done' },
+      { label: '已取消', value: 'cancel' },
     ],
   },
   {
@@ -133,18 +133,23 @@ const columns = ref([
     label: '开关',
     field: 'switch',
     el: 'Switch',
-    value: true,
   },
   {
     label: '同意条款',
     field: 'checkbox',
-    el: 'Checkbox'
+    el: 'Checkbox',
+  },
+  {
+    label: 'radio',
+    field: 'radio',
+    el: 'Radio',
   },
   {
     label: '',
     field: '',
     style: { textAlign: 'center' },
-    el: h('div', h(Button, {
+    el: h('div', [
+      h(Button, {
         type: 'primary',
         onClick: async () => { 
           await formRef.value?.validateFields()
@@ -153,8 +158,15 @@ const columns = ref([
             content: h('div', Object.entries(formData.value).map(([key, value]) => h('div', `${key}: ${value}`))),
           });
         }
-      }, '提交')
-    ),
+      }, '提交'),
+      h(Button, {
+        style: { marginLeft: '10px' },
+        onClick: () => {
+          console.log('重置')
+          formRef.value?.resetFields()
+        }
+      }, '重置'),
+    ]),
   },
 ])
 

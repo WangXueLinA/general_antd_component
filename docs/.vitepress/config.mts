@@ -39,10 +39,10 @@ export default defineConfig({
     search: {
       provider: "local",
     },
-    docFooter: {
-      prev: '上一页',
-      next: '下一页'
-    },
+    // docFooter: {
+    //   prev: '上一页',
+    //   next: '下一页'
+    // },
   },
   markdown: {
     lineNumbers: true,

@@ -25,7 +25,7 @@ const formData = ref({
   projectNums: 1,
   toPdt: ['beijing', 'shanghai'],
   node: 'root 1',
-  projectStatus: 2,
+  projectStatus: 'cancel',
   projectType: ['service'],
   switch: true,
   checkbox: true,
@@ -98,15 +98,10 @@ const columns = reactive([
     label: 'RadioGroup',
     field: 'projectStatus',
     el: computed(() => checked.value ? 'RadioGroup' : 'Text'),
-    // TODO: 文档框架对RadioGroup的监听无效，正常不需要监听value
-    value: computed(() => formData.value.projectStatus || 1),
-    onChange: (e) => {
-      formData.value.projectStatus = e.target.value || undefined
-    },
     options: [
-      { label: '进行中', value: 1 },
-      { label: '已完成', value: 2 },
-      { label: '已取消', value: 3 },
+      { label: '进行中', value: 'doing' },
+      { label: '已完成', value: 'done' },
+      { label: '已取消', value: 'cancel' },
     ],
   },
   {

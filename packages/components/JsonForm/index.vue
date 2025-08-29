@@ -1,5 +1,5 @@
 <template>
-  <a-form ref="formRef" :model="modelValue" v-bind="formProps">
+  <a-form ref="formRef" :model="formData" v-bind="formProps">
     <a-row :gutter="formProps.layout === 'inline' ? [0, 24] : undefined">
       <a-col :span="item.span || props.span" v-for="item in formItems" :key="item.field">
         <a-form-item
@@ -11,8 +11,8 @@
           <slot :name="item.field">
             <component
               :is="getComponent(item)"
-              v-model:value="modelValue[item.field]"
-              v-bind="{ ...item }"
+              v-model:value="formData[item.field]"
+              v-bind="mergeProps(item, $attrs)"
             />
           </slot>
         </a-form-item>
@@ -27,59 +27,55 @@ import {
   defineProps,
   defineExpose,
   computed,
-  watch,
-  reactive,
   useTemplateRef,
   withDefaults,
+  mergeProps,
 } from 'vue'
 import { componentsMap } from './registerForm'
 import type { FormItem } from './types'
-import type { FormProps, FormInstance } from 'ant-design-vue'
+import type { FormProps, FormInstance,  } from 'ant-design-vue'
 
 export interface JsonFormProps extends Omit<FormProps, 'model'> {
-  columns: FormItem[]
+  columns?: FormItem[]
   span?: number
-  modelValue?: Record<string, any>
 }
 
 const props = withDefaults(defineProps<JsonFormProps>(), {
   columns: [],
-  modelValue: {},
   span: 24,
 })
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: Record<string, any>): void
-}>()
-
 const formInstance = useTemplateRef<FormInstance>('formRef')
 
-// 内部表单数据
-const formData = reactive<Record<string, any>>({})
+const formData = defineModel({
+  type: Object,
+  required: false,
+  default: () => ({}),
+})
 
 const formItems = computed(() => {
   return props.columns?.filter((item) => item.isShow !== false)
 })
 
 const formProps = computed(() => {
-  const { columns, modelValue, span, ...rest } = props
+  const { columns, span, ...rest } = props
   return rest
 })
 
-// 初始化表单
 const initForm = () => {
-  // 合并外部传入的modelValue和表单配置中的默认值
-  const initialValues = { ...props?.modelValue }
-
-  // 确保每个表单项都包含必要的属性
+  const initialValues = {};
   props?.columns?.forEach((item) => {
-    if (item.field && initialValues[item.field] === undefined) {
-      initialValues[item.field] = item.value
+    if (item.field && item.value !== undefined) { // 只处理有值的情况
+      initialValues[item.field] = item.value;
     }
-  })
+  });
 
-  // 更新内部表单数据
-  Object.assign(formData, initialValues)
+  // 只合并initialValues中值不为undefined的属性
+  Object.keys(initialValues).forEach(key => {
+    if (initialValues[key] !== undefined) {
+      formData.value[key] = initialValues[key];
+    }
+  });
 }
 
 // 可扩展el可以为h('div', null, '自定义组件'), 可以为自定义组件import引入
@@ -91,26 +87,6 @@ const getComponent = (item: FormItem) => {
   return componentsMap[item.el as keyof typeof componentsMap]
 }
 
-// 监听外部modelValue变化
-watch(
-  () => props?.modelValue,
-  (newVal) => {
-    if (newVal) {
-      Object.assign(formData, newVal)
-    }
-  },
-  { deep: true }
-)
-
-// 监听内部表单数据变化并通知父组件
-watch(
-  formData,
-  (newVal) => {
-    emit('update:modelValue', { ...newVal })
-  },
-  { deep: true }
-)
-
 onMounted(() => {
   initForm()
 })
@@ -119,23 +95,16 @@ const validateFields = (): Promise<Record<string, any>> => {
   return new Promise((resolve, reject) => {
     formInstance.value
       ?.validateFields()
-      .then((formData) => resolve(formData))
+      .then((formData) =>{
+        return resolve(formData)})
       .catch((err) => reject(err))
   })
 }
 
-/**
- * 重置表单字段
- * @param {boolean} [isInit=true] 是否恢复初始值，默认为true
- */
-const resetFields = (isInit = true) => {
-  if (isInit) {
-    initForm() // 重新初始化表单，恢复默认值
-    formInstance.value?.clearValidate()
-  } else {
-    formInstance.value?.clearValidate()
-    formInstance.value?.resetFields()    
-  }
+const resetFields = () => {
+  initForm() 
+  formInstance.value?.resetFields()    
+  formInstance.value?.clearValidate()
 }
 
 defineExpose({

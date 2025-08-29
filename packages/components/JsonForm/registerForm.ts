@@ -31,35 +31,31 @@ export const transformBinding = (Component: Component) => {
   return defineComponent({
     name: Component.name,
     props: {
-      modelValue: {
-        type: [Boolean, null],
-        default: null,
-      },
       value: {
-        type: [Boolean, null],
-        default: null,
+        type: Boolean,
+        default: false,
       },
     },
     setup(props, { attrs, slots, emit }) {
-      const model = useModel(props, 'modelValue')
+      const model = useModel(props, 'value')
 
-      // 初始化值同步
-      if (props.value !== null && props.value !== undefined) {
-        model.value = props.value
-      }
+      watch(
+        () => props.value,
+        (newValue) => {
+          model.value = !!newValue
+        }
+      )
 
       return () =>
         h(
           Component,
           {
             ...attrs,
-            // 绑定checked属性
-            checked: model.value,
-            // 处理change事件
+            checked: !!model.value,
             onChange: (e: { target: { checked: boolean } }) => {
               const checked = typeof e === 'object' ? e.target.checked : e
-              model.value = checked
-              emit('update:modelValue', checked)
+              model.value = !!checked
+              emit('update:value', !!checked)
             },
           },
           slots
@@ -158,7 +154,6 @@ export const componentsMap = {
     getPopupContainer: (triggerNode: HTMLElement) => triggerNode.parentNode,
   }),
   CheckboxGroup: extendComponentsOptions(CheckboxGroup),
-  // RadioGroup,
   RadioGroup: extendComponentsOptions(RadioGroup),
   Checkbox: transformBinding(Checkbox), // 处理 v-model:checked 绑定
   Switch: transformBinding(Switch), // 处理 v-model:checked 绑定

@@ -6,6 +6,7 @@ import Demo1 from './Demo1.vue'
 import Demo2 from './Demo2.vue'
 import Demo3 from './Demo3.vue'
 import Demo4 from './Demo4.vue'
+import Demo5 from './Demo5.vue'
 </script>
 
 ## 基础用法
@@ -56,6 +57,17 @@ import Demo4 from './Demo4.vue'
 ::: details 查看代码
 <<< ./Demo3.vue
 :::
+
+## 复杂表单
+
+<div style="border: 1px solid #eee; padding: 20px"><Demo5></Demo5></div>
+
+::: details 查看代码
+<<< ./Demo5.vue
+---
+<<< ./components/table.vue
+:::
+
 
 ## API
 

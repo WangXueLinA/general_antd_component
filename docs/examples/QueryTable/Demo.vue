@@ -13,6 +13,7 @@
 <script setup>
   import { reactive, computed, useTemplateRef, h, ref } from 'vue';
   import { Modal } from 'ant-design-vue'
+  import { dateToStr } from './const'
   const [modal, contextHolder] = Modal.useModal();
   const queryTableRef = useTemplateRef('queryTableRef');
   const selectedList = ref([]);
@@ -34,11 +35,12 @@
   // 格式化搜索表单数据, 过滤出表格的filters, sorter，然后根据后端需要传参数格式自行拼接
   const formatParams = ({ filters, sorter, ...payload }) => {
     const { createdTime, ...rest } = payload;
-    // const [startTime, endTime] = dateToStr(createdTime);
+    const [startTime] = dateToStr(createdTime);
     return {
       fetchCount: true,
       query: {
         params: {
+          createdTime: startTime,
           ...rest,
         },
       },
@@ -78,16 +80,7 @@
       {
         label: '刷新',
         type: 'primary',
-        onClick: async () => {
-          const dataSource = queryTableRef.value?.getTableData()
-          queryTableRef.value.handleRefresh()
-          setTimeout(() => {
-            modal.success({
-              title: '表格dataSource',
-              content: h('div', JSON.stringify(dataSource)),
-            });
-          },2000)
-        },
+        onClick: () => queryTableRef.value.handleRefresh(),
       },
       {
         label: '重置',
