@@ -30,6 +30,7 @@ import {
   useTemplateRef,
   withDefaults,
   mergeProps,
+  provide
 } from 'vue'
 import { componentsMap } from './registerForm'
 import type { FormItem } from './types'

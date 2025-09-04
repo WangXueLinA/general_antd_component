@@ -162,12 +162,10 @@ const columns = ref([
       h(Button, {
         style: { marginLeft: '10px' },
         onClick: () => {
-          console.log('重置')
           formRef.value?.resetFields()
         }
       }, '重置'),
     ]),
   },
 ])
-
 </script>

@@ -1,5 +1,3 @@
-
-<!-- Table -->
 <template>
   <a-table
     :columns="columns"
@@ -10,62 +8,92 @@
 </template>
 
 <script setup>
-import { Input } from 'ant-design-vue';
-import { h, reactive } from 'vue'
-const modelValue = defineModel([])
-const props = defineProps([])
-const emits = defineEmits(['getValue'])
+  import { Input } from 'ant-design-vue';
+  import { h, reactive, useModel, watch } from 'vue'
+  import { Form } from "ant-design-vue";
 
-const addRow = () => {
-  data.push({
-    key: `${data.length + 1}`,
-  });
-};
+  const formItemContext = Form.useInjectFormItemContext();
+  const props = defineProps({
+    value: {
+      type: Array,
+      default: () => []
+    }
+  })
 
-const columns = [
-  {
-    title: '地址',
-    dataIndex: 'address',
-    width: 170,
-    customRender: ({ _, record ,index }) => h(Input,
-      { 
-        placeholder: '请输入地址', 
-        value: modelValue?.[index]?.address, 
-        onChange: (e) => {
-          console.log(e.target.value, '000000')
-          modelValue[index].address = e.target.value
-          emits('getValue', 22121212)
-        } 
-      }
-    )
-  },
-  {
-    title: '手机号',
-    dataIndex: 'phone',
-    width: 170,
-    customRender: ({ _, record ,index }) => h(Input, { placeholder: '请输入手机号', value: modelValue?.[index]?.phone })
-  },
-  {
-    title: '操作',
-    dataIndex: 'action',
-    width: 150,
-    customRender: ({ _, record }) => h('span',
-      { 
-        style: {color: '#1890ff'},
+  const model = useModel(props, 'value')
+  const data = reactive([]);
+
+  watch(() => props.value, (newValue) => {
+    data.length = 0;
+    (newValue || []).forEach((item, index) => {
+      data.push({
+        key: `${index + 1}`,
+        city: item.city || '',
+        phone: item.phone || ''
+      });
+    });
+  }, { immediate: true, deep: true });
+
+  const addRow = () => {
+    data.push({
+      key: `${data.length + 1}`,
+      city: '',
+      phone: ''
+    });
+    model.value = JSON.parse(JSON.stringify(data));
+    formItemContext.onFieldChange();
+  };
+
+  const handleChange = (name, value, index) => {
+    if (!data[index]) return;
+    data[index][name] = value;
+    model.value = JSON.parse(JSON.stringify(data));
+    formItemContext.onFieldChange();
+  };
+
+  const columns = [
+    {
+      title: '地址',
+      dataIndex: 'city',
+      width: 190,
+      customRender: ({ _, record, index }) => h(Form.Item, {
+        name: ['address', index, 'city'],
+        rules: [{ required: true, message: '请输入地址' }]
+      },
+        h(Input, {
+          placeholder: '请输入地址',
+          value: data[index]?.city || '',
+          onChange: (e) => handleChange('city', e.target.value, index)
+        })
+      )
+    },
+    {
+      title: '手机号',
+      dataIndex: 'phone',
+      width: 190,
+      customRender: ({ _, record, index }) => h(Form.Item, {
+        name: ['address', index, 'phone'],
+        rules: [{ required: true, message: '请输入手机号' }]
+      },
+        h(Input, {
+          placeholder: '请输入手机号',
+          value: data[index]?.phone || '',
+          onChange: (e) => handleChange('phone', e.target.value, index)
+        })
+      )
+    },
+    {
+      title: '操作',
+      dataIndex: 'action',
+      width: 190,
+      customRender: ({ _, record, index }) => h('span', {
+        style: { color: '#1890ff', cursor: 'pointer' },
         onClick: () => {
-          // 删除一行
-          data.splice(data.indexOf(record), 1);
+          data.splice(index, 1).forEach((_, i) => data[i].key = `${i + 1}`);
+          model.value = JSON.parse(JSON.stringify(data));
+          formItemContext.onFieldChange();
         }
-      }, 
-      '删除')
-  },
-];
-const data = reactive([
-  {
-    key: '1',
-  },
-  {
-    key: '2',
-  }
-]);
+      }, '删除')
+    },
+  ];
 </script>

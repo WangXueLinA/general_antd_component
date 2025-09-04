@@ -10,7 +10,7 @@ import Demo5 from './Demo5.vue'
 </script>
 
 ## 介绍
-JsonForm 是基于 ant-design-vue 的表单组件，通过 json 配置实现表单的渲染，组件内置的表单都是基于ant-design-vue 的表单组件，有Input、TextArea、InputNumber、Select、Radio、RadioGroup、Checkbox、CheckboxGroup、DatePicker、RangePicker、Switch、TreeSelect及详情的Text跟Time 组件
+JsonForm 是基于 ant-design-vue 的表单组件，通过 json 配置实现表单的渲染，组件内置的表单都是基于ant-design-vue 的表单组件，有Input、TextArea、InputNumber、Select、Radio、RadioGroup、Checkbox、CheckboxGroup、DatePicker、RangePicker、Switch、TreeSelect及详情的Text跟Time组件
 
 ## 基础用法
 
@@ -61,7 +61,7 @@ JsonForm 是基于 ant-design-vue 的表单组件，通过 json 配置实现表�
 <<< ./Demo3.vue
 :::
 
-## 复杂表单
+## 动态增减自定义表格
 
 <div style="border: 1px solid #eee; padding: 20px"><Demo5></Demo5></div>
 
