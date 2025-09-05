@@ -97,5 +97,16 @@
           }),
         ),
     },
+    {
+      label: '级联',
+      field: 'cascader',
+      el: 'Cascader',
+      placeholder: '请选择级联',
+      getOptions: () =>
+        Promise.resolve([
+          { label: '浙江', value: 'zhejiang', children: [{ label: '杭州', value: 'hangzhou' }] },
+          { label: '江苏', value: 'jiangsu', children: [{ label: '南京', value: 'nanjing' }] },
+        ])
+    },
   ]);
 </script>

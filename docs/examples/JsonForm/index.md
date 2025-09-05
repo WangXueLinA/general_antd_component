@@ -11,7 +11,7 @@ import Demo6 from './Demo6.vue'
 </script>
 
 ## 介绍
-JsonForm 是基于 ant-design-vue 的表单组件，通过 json 配置实现表单的渲染，组件内置的表单都是基于ant-design-vue 的表单组件，有Input、TextArea、InputNumber、Select、Radio、RadioGroup、Checkbox、CheckboxGroup、DatePicker、RangePicker、Switch、TreeSelect及详情的Text跟Time组件，通过`registerForm`进行全局组件注册。
+JsonForm 是基于 ant-design-vue 的表单组件，通过 json 配置实现表单的渲染，组件内置的表单都是基于ant-design-vue 的表单组件，有Input、TextArea、InputNumber、Select、Radio、RadioGroup、Checkbox、CheckboxGroup、DatePicker、RangePicker、Switch、TreeSelect、Cascader及详情的Text跟Time组件，通过`registerForm`进行全局组件注册。
 
 ```js
 import { 
@@ -23,7 +23,8 @@ import {
   Radio, 
   DatePicker, 
   Select, 
-  TreeSelect 
+  TreeSelect,
+  Cascader
 } from 'ant-design-vue';
 import Text from './components/text.vue';
 import Time from './components/time.vue';
@@ -155,6 +156,11 @@ export const componentsMap = {
   DatePicker,
   Input,
   RangePicker,
+  Cascader: extendComponentsOptions(Cascader, {
+    allowClear: true,
+    showSearch: true,
+    getPopupContainer: (triggerNode: HTMLElement) => triggerNode.parentNode,
+  }),
   TreeSelect: extendComponentsOptions(TreeSelect, {
     allowClear: true,
     showSearch: true,
@@ -196,7 +202,7 @@ export const componentsMap = {
 
 ## 异步获取表单数据
 
-表单组件（如 Select、TreeSelect、CheckboxGroup、RadioGroup）支持通`options`属性直接配置渲染数据；新增`getOptions`异步方法，可动态获取并加载表单数据，灵活适配需要远程请求的场景。需返回一个 Promise 对象，格式为：`{ label: string, value: string | number }[]`
+表单组件（如 Select、TreeSelect、CheckboxGroup、RadioGroup、Cascader）支持通`options`属性直接配置渲染数据；新增`getOptions`异步方法，可动态获取并加载表单数据，灵活适配需要远程请求的场景。需返回一个 Promise 对象，格式为：`{ label: string, value: string | number }[]`
 
 <div style="border: 1px solid #eee; padding: 20px"><Demo2></Demo2></div>
 

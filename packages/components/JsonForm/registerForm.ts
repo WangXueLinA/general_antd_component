@@ -8,6 +8,7 @@ import {
   DatePicker,
   Select,
   TreeSelect,
+  Cascader
 } from 'ant-design-vue'
 import Text from './components/text.vue'
 import Time from './components/time.vue'
@@ -25,6 +26,7 @@ import {
   watch,
   type Component,
 } from 'vue'
+import { get } from 'http'
 
 // 处理 v-model:checked 绑定
 export const transformBinding = (Component: Component) => {
@@ -141,6 +143,11 @@ export const componentsMap = {
   DatePicker,
   Input,
   RangePicker,
+  Cascader: extendComponentsOptions(Cascader, {
+    allowClear: true,
+    showSearch: true,
+    getPopupContainer: (triggerNode: HTMLElement) => triggerNode.parentNode,
+  }),
   TreeSelect: extendComponentsOptions(TreeSelect, {
     allowClear: true,
     showSearch: true,
