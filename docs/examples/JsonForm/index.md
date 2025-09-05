@@ -7,28 +7,29 @@ import Demo2 from './Demo2.vue'
 import Demo3 from './Demo3.vue'
 import Demo4 from './Demo4.vue'
 import Demo5 from './Demo5.vue'
+import Demo6 from './Demo6.vue'
 </script>
 
 ## 介绍
 JsonForm 是基于 ant-design-vue 的表单组件，通过 json 配置实现表单的渲染，组件内置的表单都是基于ant-design-vue 的表单组件，有Input、TextArea、InputNumber、Select、Radio、RadioGroup、Checkbox、CheckboxGroup、DatePicker、RangePicker、Switch、TreeSelect及详情的Text跟Time组件，通过`registerForm`进行全局组件注册。
 
 ```js
-import {
-  Input,
-  Textarea,
-  Switch,
-  Checkbox,
-  InputNumber,
-  Radio,
-  DatePicker,
-  Select,
-  TreeSelect,
-} from 'ant-design-vue'
-import Text from './components/text.vue'
-import Time from './components/time.vue'
-const { RangePicker } = DatePicker
-const RadioGroup = Radio.Group
-const CheckboxGroup = Checkbox.Group
+import { 
+  Input, 
+  Textarea, 
+  Switch, 
+  Checkbox, 
+  InputNumber, 
+  Radio, 
+  DatePicker, 
+  Select, 
+  TreeSelect 
+} from 'ant-design-vue';
+import Text from './components/text.vue';
+import Time from './components/time.vue';
+const { RangePicker } = DatePicker;
+const RadioGroup = Radio.Group;
+const CheckboxGroup = Checkbox.Group;
 
 import {
   defineComponent,
@@ -52,13 +53,15 @@ export const transformBinding = (Component: Component) => {
       },
     },
     setup(props, { attrs, slots, emit }) {
-      const model = useModel(props, 'value')
+      const model = useModel(props, 'value');
+
       watch(
         () => props.value,
-        (newValue) => {
-          model.value = !!newValue
-        }
-      )
+        newValue => {
+          model.value = !!newValue;
+        },
+      );
+
       return () =>
         h(
           Component,
@@ -66,16 +69,16 @@ export const transformBinding = (Component: Component) => {
             ...attrs,
             checked: !!model.value,
             onChange: (e: { target: { checked: boolean } }) => {
-              const checked = typeof e === 'object' ? e.target.checked : e
-              model.value = !!checked
-              emit('update:value', !!checked)
+              const checked = typeof e === 'object' ? e.target.checked : e;
+              model.value = !!checked;
+              emit('update:value', !!checked);
             },
           },
-          slots
-        )
+          slots,
+        );
     },
-  })
-}
+  });
+};
 
 // 扩展组件，支持异步属性getOptions获取options
 const extendComponentsOptions = (Component: Component, config?: any) => {
@@ -94,37 +97,39 @@ const extendComponentsOptions = (Component: Component, config?: any) => {
     setup(props, { attrs, slots }) {
       const state = reactive({
         options: props.options || [], // 默认使用传入的 options
-      })
+      });
+
       // 过滤掉扩展属性getOptions，只保留独有的props
       const selectProps = computed(() => {
-        const { getOptions, ...rest } = props
-        return rest
-      })
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { getOptions, ...rest } = props;
+        return rest;
+      });
 
       // 获取选项数据
       const fetchOptions = async (...args: any) => {
-        if (!props.getOptions) return // 如果没有提供 getOptions，直接返回
+        if (!props.getOptions) return; // 如果没有提供 getOptions，直接返回
         try {
-          const result = await props.getOptions(...args)
+          const result = await props.getOptions(...args);
           // 格式化选项数据，自己在接口里map处理label跟value的对应值
-          state.options = result
+          state.options = result;
         } catch (error) {
-          state.options = []
+          state.options = [];
         }
-      }
+      };
 
       onMounted(() => {
-        fetchOptions()
-      })
+        fetchOptions();
+      });
 
       watch(
         () => props.options,
-        (newOptions) => {
+        newOptions => {
           if (newOptions && !props.getOptions) {
-            state.options = newOptions
+            state.options = newOptions;
           }
-        }
-      )
+        },
+      );
       return () =>
         h(
           Component,
@@ -132,17 +137,15 @@ const extendComponentsOptions = (Component: Component, config?: any) => {
             ...attrs,
             // treeSelect需要treeData, 需要特殊处理，正常配置options就可以
             // 如有嵌套childern的话，也需要深层递归满足label跟value格式
-            ...(Component.name === 'ATreeSelect'
-              ? { treeData: state.options }
-              : { options: state.options }),
+            ...(Component.name === 'ATreeSelect' ? { treeData: state.options } : { options: state.options }),
             ...config,
             ...selectProps,
           },
-          slots
-        )
+          slots,
+        );
     },
-  })
-}
+  });
+};
 
 export const componentsMap = {
   Text,
@@ -152,33 +155,23 @@ export const componentsMap = {
   DatePicker,
   Input,
   RangePicker,
-
-  // 初始化配置，新增自定义getOptions属性异步获取options
   TreeSelect: extendComponentsOptions(TreeSelect, {
     allowClear: true,
     showSearch: true,
     getPopupContainer: (triggerNode: HTMLElement) => triggerNode.parentNode,
-    filterTreeNode: (inputValue: string, { label }: any) =>
-      label.indexOf(inputValue) !== -1,
+    filterTreeNode: (inputValue: string, { label }: any) => label.indexOf(inputValue) !== -1,
   }),
-
-  // 初始化配置，新增自定义getOptions属性异步获取options
   Select: extendComponentsOptions(Select, {
     allowClear: true,
     showSearch: true,
     getPopupContainer: (triggerNode: HTMLElement) => triggerNode.parentNode,
   }),
-
-  // 初始化配置，新增自定义getOptions属性异步获取options
   CheckboxGroup: extendComponentsOptions(CheckboxGroup),
-
-  // 初始化配置，新增自定义getOptions属性异步获取options
   RadioGroup: extendComponentsOptions(RadioGroup),
   Checkbox: transformBinding(Checkbox), // 处理 v-model:checked 绑定
   Switch: transformBinding(Switch), // 处理 v-model:checked 绑定
   Radio: transformBinding(Radio), // 处理 v-model:checked 绑定
-}
-
+};
 ```
 
 ## 基础用法
@@ -221,14 +214,7 @@ export const componentsMap = {
 <<< ./Demo4.vue
 :::
 
-## 布局
 
-
-<div style="border: 1px solid #eee; padding: 20px"><Demo3></Demo3></div>
-
-::: details 查看代码
-<<< ./Demo3.vue
-:::
 
 ## 动态增减自定义表格
 
@@ -240,6 +226,21 @@ export const componentsMap = {
 <<< ./components/table.vue
 :::
 
+## 高级搜索
+
+<div style="border: 1px solid #eee; padding: 20px"><Demo6></Demo6></div>
+
+::: details 查看代码
+<<< ./Demo6.vue
+:::
+
+## 布局
+
+<div style="border: 1px solid #eee; padding: 20px"><Demo3></Demo3></div>
+
+::: details 查看代码
+<<< ./Demo3.vue
+:::
 
 ## API
 
