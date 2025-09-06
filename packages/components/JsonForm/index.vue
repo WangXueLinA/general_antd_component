@@ -31,15 +31,23 @@ import {
   useTemplateRef,
   withDefaults,
   mergeProps,
-  provide
+  watch,
 } from 'vue'
 import { componentsMap } from './registerForm'
 import type { FormItem } from './types'
-import type { FormProps, FormInstance,  } from 'ant-design-vue'
+import type { FormProps, FormInstance } from 'ant-design-vue'
 
 export interface JsonFormProps extends Omit<FormProps, 'model'> {
   columns?: FormItem[]
   span?: number
+}
+
+export interface FormItemWithDependency extends FormItem {
+  isShow?: boolean | {
+    notIn?: boolean;
+    relation?: 'and' | 'or';
+    relyOn?: Record<string, any[]>;
+  }
 }
 
 const props = withDefaults(defineProps<JsonFormProps>(), {
@@ -55,8 +63,101 @@ const formData = defineModel({
   default: () => ({}),
 })
 
+const shouldShowItem = (item: FormItemWithDependency): boolean => {
+  let isShow: boolean;
+  
+  if (typeof item.isShow === 'boolean') {
+    isShow = item.isShow;
+  } else if (!item.isShow) {
+    isShow = true;
+  } else {
+    const { notIn = false, relation = 'or', relyOn } = item.isShow;
+    const relyOnKeys = Object.keys(relyOn || {});
+    
+    if (relyOnKeys.length === 0) {
+      isShow = true;
+    } else {
+      const checkResults = relyOnKeys.map(key => {
+        const targetValues = relyOn![key];
+        const currentValue = formData.value[key];
+        return targetValues.includes(currentValue);
+      });
+      
+      if (relation === 'and') {
+        isShow = checkResults.every(Boolean);
+      } else {
+        isShow = checkResults.some(Boolean);
+      }
+      
+      isShow = notIn ? !isShow : isShow;
+    }
+  }
+  
+  if (isShow) {
+    if (formData.value[item.field] === undefined && item.value !== undefined) {
+      formData.value[item.field] = item.value;
+    }
+  } else {
+    if (formData.value[item.field] !== undefined) {
+      const { [item.field]: _, ...rest } = formData.value;
+      formData.value = rest;
+    }
+  }
+  return isShow;
+}
+
+// 收集所有依赖关系，用于级联重置
+const getDependencyMap = () => {
+  const map: Record<string, string[]> = {};
+  props.columns?.forEach(item => {
+    if (item.isShow && typeof item.isShow !== 'boolean' && item.isShow.relyOn) {
+      Object.keys(item.isShow.relyOn).forEach(relyKey => {
+        if (!map[relyKey]) {
+          map[relyKey] = [];
+        }
+        if (!map[relyKey].includes(item.field)) {
+          map[relyKey].push(item.field);
+        }
+      });
+    }
+  });
+  return map;
+};
+
+const resetDependentFields = (field: string) => {
+  const dependencyMap = getDependencyMap();
+  const dependentFields = dependencyMap[field] || [];
+  
+  dependentFields.forEach(depField => {
+    formData.value[depField] = undefined;
+    resetDependentFields(depField);
+  });
+};
+
+// 依赖表单字段的值变化时，要将自己设置为undefined
+watch(() => ({ ...formData.value }), (newVal, oldVal) => {
+  const changedFields = new Set<string>();
+  Object.keys(newVal).forEach(key => {
+    if (newVal[key] !== oldVal?.[key]) {
+      changedFields.add(key);
+    }
+  });
+
+  if (oldVal) {
+    Object.keys(oldVal).forEach(key => {
+      if (!(key in newVal)) {
+        changedFields.add(key);
+      }
+    });
+  }
+  
+  changedFields.forEach(field => {
+    resetDependentFields(field);
+  });
+}, { deep: true });
+
 const formItems = computed(() => {
-  return props.columns?.filter((item) => item.isShow !== false)
+  return props.columns?.filter(item => shouldShowItem(item)) || []
 })
 
 const formProps = computed(() => {
@@ -67,12 +168,11 @@ const formProps = computed(() => {
 const initForm = () => {
   const initialValues = {};
   props?.columns?.forEach((item) => {
-    if (item.field && item.value !== undefined) { // 只处理有值的情况
+    if (item.field && item.value !== undefined) {
       initialValues[item.field] = item.value;
     }
   });
 
-  // 只合并initialValues中值不为undefined的属性
   Object.keys(initialValues).forEach(key => {
     if (initialValues[key] !== undefined) {
       formData.value[key] = initialValues[key];
@@ -80,7 +180,6 @@ const initForm = () => {
   });
 }
 
-// 可扩展el可以为h('div', null, '自定义组件'), 可以为自定义组件import引入
 const getComponent = (item: FormItem) => {
   const { el } = item
   if (typeof el !== 'string') {
@@ -97,8 +196,7 @@ const validateFields = (): Promise<Record<string, any>> => {
   return new Promise((resolve, reject) => {
     formInstance.value
       ?.validateFields()
-      .then((formData) =>{
-        return resolve(formData)})
+      .then((formData) => resolve(formData))
       .catch((err) => reject(err))
   })
 }

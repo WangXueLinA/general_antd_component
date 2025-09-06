@@ -2,14 +2,18 @@
   <div style="margin-bottom: 40px">
     <a-switch v-model:checked="checked" checked-children="编辑" un-checked-children="详情" />
   </div>
-  <JsonForm :columns="columns" :labelCol="{ style: { width: '70px' } }" v-model="formData" ref="formRef"> </JsonForm>
-  <contextHolder />
+
+  <JsonForm 
+    :columns="columns" 
+    :labelCol="{ style: { width: '70px' } }" 
+    v-model="formData" 
+    ref="formRef"
+  />
 </template>
 <script setup>
   import { h, useTemplateRef, ref, reactive, computed } from 'vue';
   import { Modal, Button } from 'ant-design-vue';
   import Table from './components/table.vue';
-  const [modal, contextHolder] = Modal.useModal();
   const formRef = useTemplateRef('formRef');
 
   const checked = ref(true);
@@ -57,12 +61,14 @@
             type: 'primary',
             onClick: async () => {
               await formRef.value?.validateFields();
-              modal.success({
+              Modal.success({
                 title: '提交参数',
                 content: h(
                   'div',
                   Object.entries(formData).map(([key, value]) => h('div', `${key}: ${JSON.stringify(value)}`)),
                 ),
+                onOk() {},
+                onCancel() {},
               });
             },
           },

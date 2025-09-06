@@ -2,7 +2,12 @@
   <div style="margin-bottom: 40px">
     <a-switch v-model:checked="checked" checked-children="编辑" un-checked-children="详情" />
   </div>
-  <JsonForm :columns="columns" :labelCol="{ style: { width: '120px' } }" v-model="formData"> </JsonForm>
+
+  <JsonForm 
+    :columns="columns" 
+    :labelCol="{ style: { width: '120px' } }" 
+    v-model="formData"
+  />
 </template>
 <script setup>
   import { computed, reactive, ref } from 'vue';

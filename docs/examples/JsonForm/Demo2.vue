@@ -1,5 +1,9 @@
 <template>
-  <JsonForm :columns="columns" :labelCol="{ style: { width: '100px' } }" v-model="formData"> </JsonForm>
+  <JsonForm 
+    :columns="columns" 
+    :labelCol="{ style: { width: '100px' } }" 
+    v-model="formData"
+  />
 </template>
 
 <script setup>

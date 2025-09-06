@@ -5,15 +5,12 @@
     :rules="rules"
     v-model="formData"
     ref="formRef"
-  >
-  </JsonForm>
-  <contextHolder />
+  />
 </template>
 <script setup>
-  import { h, ref, useTemplateRef, computed } from 'vue';
+  import { h, ref, useTemplateRef } from 'vue';
   import { Button, Modal } from 'ant-design-vue';
 
-  const [modal, contextHolder] = Modal.useModal();
   const formRef = useTemplateRef('formRef');
 
   const formData = ref({
@@ -195,12 +192,14 @@
             type: 'primary',
             onClick: async () => {
               await formRef.value?.validateFields();
-              modal.success({
+              Modal.success({
                 title: '提交参数',
                 content: h(
                   'div',
                   Object.entries(formData.value).map(([key, value]) => h('div', `${key}: ${value}`)),
                 ),
+                onOk() {},
+                onCancel() {},
               });
             },
           },

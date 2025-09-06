@@ -18,8 +18,7 @@
     :disabled="disabled"
     :layout="layout"
     :span="span"
-  >
-  </JsonForm>
+  />
 </template>
 <script setup>
   import { ref, computed } from 'vue';

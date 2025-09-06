@@ -1,12 +1,15 @@
 <template>
-  <JsonForm :columns="columns" :labelCol="{ style: { width: '100px' } }" v-model="formData" ref="formRef"> </JsonForm>
-  <contextHolder />
+  <JsonForm 
+    :columns="columns" 
+    :labelCol="{ style: { width: '100px' } }" 
+    v-model="formData" 
+    ref="formRef"
+  />
 </template>
 <script setup>
   import { h, useTemplateRef, ref, computed } from 'vue';
   import { Input, Modal, Tooltip, Button } from 'ant-design-vue';
   import { QuestionCircleOutlined } from '@ant-design/icons-vue';
-  const [modal, contextHolder] = Modal.useModal();
   const formRef = useTemplateRef('formRef');
 
   const formData = ref({});
@@ -57,12 +60,14 @@
             type: 'primary',
             onClick: async () => {
               await formRef.value?.validateFields();
-              modal.success({
+              Modal.success({
                 title: '提交参数',
                 content: h(
                   'div',
                   Object.entries(formData.value).map(([key, value]) => h('div', `${key}: ${value}`)),
                 ),
+                onOk() {},
+                onCancel() {},
               });
             },
           },

@@ -8,6 +8,7 @@ import Demo3 from './Demo3.vue'
 import Demo4 from './Demo4.vue'
 import Demo5 from './Demo5.vue'
 import Demo6 from './Demo6.vue'
+import Demo7 from './Demo7.vue'
 </script>
 
 ## 介绍
@@ -210,6 +211,28 @@ export const componentsMap = {
 <<< ./Demo2.vue
 :::
 
+
+## 动态依赖表单项显隐
+
+依靠isShow属性控制表单项显隐，true为显示，false为隐藏。也可以进行扩展配置，依赖表单的field属性跟表单的value属性进行枚举匹配，进行表单项的显隐控制。
+
+```js
+{
+  relation?: 'and' | 'or' // 默认or, and表示所有依赖项都满足条件时才显示表单项
+  notIn?: boolean // 默认false, true表示依赖项的值取反显示表单项
+  relyOn: { 
+    [k: string]: string[] // key为依赖表单项的field，value为依赖项value值的集合
+  },
+  // external?: boolean
+}
+```
+
+<div style="border: 1px solid #eee; padding: 20px"><Demo7></Demo7></div>
+
+::: details 查看代码
+<<< ./Demo7.vue
+:::
+
 ## 内置详情Text及日期Time组件
 
 内置详情Text组件，可以使表单支持编辑跟详情使用一套代码逻辑，时间格式表单详情为Time，极大简化代码量
@@ -219,8 +242,6 @@ export const componentsMap = {
 ::: details 查看代码
 <<< ./Demo4.vue
 :::
-
-
 
 ## 动态增减自定义表格
 
@@ -261,13 +282,16 @@ export const componentsMap = {
 
 | 参数名         | 类型                | 说明                                                                                                                   |
 | -------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| el             | **string \| Function**  | 表单项使用的组件名称（在 registerForm 文件中查看枚举）或自定义组件函数或 h 函数生成组件                                |
+| el             | string/h函数自定义  | 表单项使用的组件名称（在 registerForm 文件中查看枚举）或自定义组件函数或 h 函数生成组件                                |
 | label          | string              | 表单项的标签文本                                                                                                       |
 | field          | string              | 同表单绑定的 v-model:value 或者 v-model:checked                                                                        |
 | value          | any                 | 表单项的默认值                                                                                                         |
 | isShow         | boolean             | 表单项的显示隐藏                                                                                                       |
+| span         | number             | a-col 组件的 span 属性，用于控制表单项的布局个数，默认为 24                                                                                                   |
 | getOptions     | Promise.resolve     | 表单项有 options 配置的可以通过 getOptions 函数异步拿取 options 并将数据 return 为 Array<{label：'显示标题', value：'值'}> |
 | 剩余表单 props | any                 | 表单项各自的属性的配置可直接作用到表单项上                                                                       |
+
+## useJsonForm
 
 引入组件可以通过 import 来导入，或者内部的 hook 方式引入组件，抛出的实例可根据业务进行自己增加或者修改
 
@@ -275,8 +299,6 @@ export const componentsMap = {
 <template>
   <JsonForm />
 </template>
-  import { useForm } from '@/components/Form/useForm';
-  import { JsonForm, validateFields } = useForm()
+  import { useJsonForm } from '@/components/Form/useForm';
+  import { JsonForm, validateFields } = useJsonForm()
 ```
-
-registerForm 可根据需要进行增加全局通用的表单组件进行统一配置，或单独自定义组件来导入
