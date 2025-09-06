@@ -20,6 +20,7 @@
     projectDesc: '项目描述',
     projectNums: 1,
     toPdt: ['beijing', 'shanghai'],
+    cascader: ['parent 1', 'parent 1-1'],
     node: 'root 1',
     projectStatus: 'cancel',
     projectType: ['service'],
@@ -87,6 +88,28 @@
               value: 'parent 2',
             },
           ],
+        },
+      ],
+    },
+    {
+      label: 'Cascader',
+      field: 'cascader',
+      el: computed(() => (checked.value ? 'Cascader' : 'Text')),
+      placeholder: '请选择分类',
+      options: [
+        {
+          label: 'parent 1',
+          value: 'parent 1',
+          children: [
+            {
+              label: 'parent 1-1',
+              value: 'parent 1-1',
+            },
+          ],
+        },
+        {
+          label: 'parent 2',
+          value: 'parent 2',
         },
       ],
     },
