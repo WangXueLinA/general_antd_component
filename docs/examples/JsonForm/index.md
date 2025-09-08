@@ -283,32 +283,32 @@ export const componentsMap = {
 
 | 参数名                    | 类型       | 默认值 | 说明                                             |
 | ------------------------- | ---------- | ------ | ------------------------------------------------ |
-| [columns](/examples/JsonForm/##columns)               | FormItem[] | 无     | 表单列配置数组                                   |
+| [columns](/examples/JsonForm/#my-columns)               | FormItem[] | 无     | 表单列配置数组                                   |
 | span                      | number     | 无     | a-col 组件的 span 属性，用于控制表单项的布局个数 |
 | 其余参数同form一样 | ---        | ---    | 参考 [Ant Design Vue的form](https://www.antdv.com/components/form-cn)                                 |
 
 
-### columns 参数
+### columns 参数 {#my-columns}
 
 | 参数名         | 类型                | 说明                                                                                                                   |
 | -------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | el             | string/h函数自定义  | 表单项使用的组件名称（在 registerForm 文件中查看枚举）或自定义组件函数或 h 函数生成组件                                |
 | label          | string              | 表单项的标签文本                                                                                                       |
 | field          | string              | 同表单绑定的 v-model:value 或者 v-model:checked                                                                        |
-| value          | any                 | 作用到表单项的值                                                                                                         |
-| isShow         | boolean / [Dynamic](/examples/JsonForm/##Dynamic)  | 表单项的显示隐藏                                                                                                       |
+| value          | `Ref<any>` / `Reactive<any>` | 表单的值                                                                                                           | 作用到表单项的值                                                                                                         |
+| isShow         | `Ref<boolean>` / [Dynamic](/examples/JsonForm/#my-dynamic)  | 表单项的显示隐藏                                                                                                       |
 | span         | number             | a-col 组件的 span 属性，用于控制表单项的布局个数，默认为 24                                                                                                   |
 | getOptions     | Promise.resolve([])    | 表单项有 options 配置的可以通过 getOptions 函数异步拿取 options 并将数据 return 为 Array<{label：'显示标题', value：'值'}> |
 | 剩余表单 props | any                 | 表单项各自的属性的配置可直接作用到表单项上     | 
 
 
-### Dynamic 参数
+### Dynamic 参数 {#my-dynamic}
 | 属性	 | 说明	 | 类型 | 	默认值 | 
 | ----  | ----- |  ---- | ---- | 
-| relyOn	 | 依赖表单项及表单项值的枚举 | `Object {[k: string]: any[] }` |  -  | 
-| relation	 | relyOn 有多个表单项 key 时之间确定逻辑关系，默认条件为或集（or），并集（and） | 	'and' 、 'or'	 | 'or' | 
-| notIn	 | 是否取relyOn里枚举的反值	 | boolean	 | false |
-| external	 | 是否使用外部数据	 | boolean	 | false |
+| relyOn	 | `Object {[k: string]: any[] }` | 依赖表单项及表单项值的枚举 |  -  | 
+| relation	 | 'and' 、 'or' | 	relyOn 有多个表单项 key 时之间确定逻辑关系，默认条件为或集（or），并集（and）	 | 'or' | 
+| notIn	 | boolean	 | 是否取relyOn里枚举的反值	 | false |
+| external	 | `Ref<boolean>` | 外部依赖的条件的布尔值	 | false |
 
 
 ## useJsonForm

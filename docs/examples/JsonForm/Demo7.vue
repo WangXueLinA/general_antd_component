@@ -131,8 +131,8 @@
       el: 'Select',
       placeholder: '请选择性别',
       options: [
-        { label: '男(依赖外部条件跟选择男展示年龄)', value: 'male' },
-        { label: '女(依赖外部条件跟选择女不展示年龄)', value: 'female' },
+        { label: '男(展示年龄)', value: 'male' },
+        { label: '女(不展示年龄)', value: 'female' },
       ],
       isShow: sexChecked,
     },
@@ -142,7 +142,9 @@
       el: 'InputNumber',
       style: { width: '100%' },
       span: 24,
-      placeholder: '显示条件为性别为男并且项目名称展示',
+      status: 'warning',
+      placeholder: '输入年龄',
+      addonBefore: '显示条件为性别为男并且项目名称展示的时候才展示',
       // isShow: computed(() => sexChecked.value && checked.value),
       isShow: {
         relation: 'and',
