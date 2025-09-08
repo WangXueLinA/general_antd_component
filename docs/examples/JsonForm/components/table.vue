@@ -28,9 +28,8 @@
     () => props.value,
     newValue => {
       data.length = 0;
-      (newValue || []).forEach((item, index) => {
+      (newValue || []).forEach(item => {
         data.push({
-          key: `${index + 1}`,
           city: item.city || '',
           phone: item.phone || '',
         });
@@ -48,7 +47,6 @@
 
   const addRow = () => {
     data.push({
-      key: `${data.length + 1}`,
       city: '',
       phone: '',
     });
@@ -65,7 +63,7 @@
 
   const columns = reactive([
     {
-      title: '地址',
+      title: '城市',
       dataIndex: 'city',
       width: 190,
       customRender: ({ _, record, index }) =>
@@ -74,10 +72,10 @@
               Form.Item,
               {
                 name: ['address', index, 'city'],
-                rules: [{ required: true, message: '请输入地址' }],
+                rules: [{ required: true, message: '请输入城市' }],
               },
               h(Input, {
-                placeholder: '请输入地址',
+                placeholder: '请输入城市',
                 value: data[index]?.city || '',
                 onChange: e => handleChange('city', e.target.value, index),
               }),
@@ -85,7 +83,7 @@
           : h('span', data[index]?.city || ''),
     },
     {
-      title: '手机号',
+      title: '具体地址',
       dataIndex: 'phone',
       width: 190,
       customRender: ({ _, record, index }) =>
@@ -94,10 +92,10 @@
               Form.Item,
               {
                 name: ['address', index, 'phone'],
-                rules: [{ required: true, message: '请输入手机号' }],
+                rules: [{ required: true, message: '请输入具体地址' }],
               },
               h(Input, {
-                placeholder: '请输入手机号',
+                placeholder: '请输入具体地址',
                 value: data[index]?.phone || '',
                 onChange: e => handleChange('phone', e.target.value, index),
               }),
@@ -115,7 +113,7 @@
               {
                 style: { color: '#1890ff', cursor: 'pointer' },
                 onClick: () => {
-                  data.splice(index, 1).forEach((_, i) => (data[i].key = `${i + 1}`));
+                  data.splice(index, 1);
                   model.value = JSON.parse(JSON.stringify(data));
                   formItemContext.onFieldChange();
                 },
