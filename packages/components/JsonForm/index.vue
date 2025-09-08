@@ -26,7 +26,8 @@
     useTemplateRef, 
     withDefaults, 
     mergeProps, 
-    watch
+    watch,
+    unref
   } from 'vue';
   import { componentsMap } from './registerForm';
   import type { FormItem } from './types';
@@ -65,7 +66,7 @@
     let isShow: boolean;
 
     if (typeof item.isShow === 'boolean') {
-      isShow = item.isShow;
+      isShow = unref(item.isShow);
     } else if (!item.isShow) {
       isShow = true;
     } else {
@@ -94,16 +95,14 @@
         isShow = notIn ? !isShow : isShow;
       }
 
-      // 处理外部条件
-      // if (external !== undefined) {
-      //   const externalValue = unref(external); // 处理ref或reactive对象
-      //   // 根据relation将外部条件与现有条件结合
-      //   if (relation === 'and') {
-      //     isShow = isShow && externalValue;
-      //   } else {
-      //     isShow = isShow || externalValue;
-      //   }
-      // }
+      if (external !== undefined) {
+        const externalValue = unref(external);
+        if (relation === 'and') {
+          isShow = isShow && externalValue;
+        } else {
+          isShow = isShow || externalValue;
+        }
+      }
     }
 
     if (isShow) {

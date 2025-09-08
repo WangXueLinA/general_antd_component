@@ -136,13 +136,22 @@
       ],
       isShow: sexChecked,
     },
-    // {
-    //   label: '年龄',
-    //   field: 'age',
-    //   el: 'InputNumber',
-    //   placeholder: '请输入年龄',
-    //   isShow: (sexChecked && checked),
-    // },
+    {
+      label: '年龄',
+      field: 'age',
+      el: 'InputNumber',
+      style: { width: '100%' },
+      span: 24,
+      placeholder: '显示条件为性别为男并且项目名称展示',
+      // isShow: computed(() => sexChecked.value && checked.value),
+      isShow: {
+        relation: 'and',
+        relyOn: {
+          sex: ['male'],
+        },
+        external: checked
+      },
+    },
     {
       label: '',
       field: '',

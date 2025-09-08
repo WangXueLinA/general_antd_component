@@ -232,9 +232,8 @@ export const componentsMap = {
   // 默认false, true表示依赖项的值取反显示表单项
   notIn?: boolean
 
-  // TODO:后续扩展
   // 外部依赖，即不是表单项的依赖，自定义外部依赖参与表单项的显隐
-  // external?: boolean
+  external?: boolean
 }
 ```
 
@@ -308,7 +307,8 @@ export const componentsMap = {
 | ----  | ----- |  ---- | ---- | 
 | relyOn	 | 依赖表单项及表单项值的枚举 | `Object {[k: string]: any[] }` |  -  | 
 | relation	 | relyOn 有多个表单项 key 时之间确定逻辑关系，默认条件为或集（or），并集（and） | 	'and' 、 'or'	 | 'or' | 
-| notIn	 | 是否取relyOn里枚举的反值	 | boolean	 | false | 
+| notIn	 | 是否取relyOn里枚举的反值	 | boolean	 | false |
+| external	 | 是否使用外部数据	 | boolean	 | false |
 
 
 ## useJsonForm
