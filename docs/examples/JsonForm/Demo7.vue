@@ -1,59 +1,50 @@
 <template>
-  <div style="margin-bottom: 40px">
-    是否展示项目名称：<a-switch v-model:checked="checked"  />
+  <div style="margin-bottom: 40px"> 
+    项目名称：
+    <a-switch v-model:checked="checked" checked-children="展示" un-checked-children="隐藏" /> 
+
+    <span style="margin-left: 50px;">
+      性别：
+      <a-switch v-model:checked="sexChecked" checked-children="展示" un-checked-children="隐藏" /> 
+    </span>
+
   </div>
 
-  <JsonForm 
-    :columns="columns" 
-    :labelCol="{ style: { width: '100px' } }" 
-    v-model="formData" 
-    ref="formRef"
-  />
+  <JsonForm :columns="columns" :labelCol="{ style: { width: '70px' } }" v-model="formData" ref="formRef" />
 </template>
 <script setup>
-  import { h, useTemplateRef, ref, computed, reactive } from 'vue';
+  import { h, useTemplateRef, ref, reactive, watch, computed } from 'vue';
   import { Modal, Button } from 'ant-design-vue';
+  import jsonp from 'fetch-jsonp';
+
   const formRef = useTemplateRef('formRef');
 
   const formData = ref({});
   const checked = ref(true);
+  const cityId = ref(undefined)
+  const cityOptions = ref([])
+  const districtId = ref(undefined)
+  const districtOptions = ref([])
+  const sexChecked = ref(true)
 
-  const city= computed(() => {
-    if (formData.value.province === 'jiangsu') {
-      return [
-        { label: '苏州', value: 'suzhou' },
-      ];
+  watch(cityId, (newVal) => {
+    if (newVal) {
+      jsonp(`https://fts.jd.com/area/get?fid=${newVal}`)
+        .then(res => res.json())
+        .then(res => {
+          cityOptions.value = res.map(item => ({ label : item.name, value: item.id }))
+        })
     }
-    if (formData.value.province === 'zhejiang') {
-      return [
-        { label: '杭州', value: 'hangzhou' },
-      ];
-    }
-    return [];
   })
 
-  const district = computed(() => {
-    if (formData.value.city === 'suzhou') {
-      return [
-        { label: '吴中区', value: 'wuzhong' },
-        { label: '姑苏区', value: 'gusu' },
-        { label: '虎丘区', value: 'huqiu' },
-      ];
+  watch(districtId, (newVal) => {
+    if (newVal) {
+      jsonp(`https://fts.jd.com/area/get?fid=${newVal}`)
+        .then(res => res.json())
+        .then(res => {
+          districtOptions.value = res.map(item => ({ label : item.name, value: item.id }))
+        })
     }
-    if (formData.value.city === 'hangzhou') {
-      return [
-        { label: '余杭区', value: 'yuhang' },
-        { label: '临安区', value: 'linan' },
-        { label: '上城区', value: 'shangcheng' },
-        { label: '下城区', value: 'xiacheng' },
-        { label: '江干区', value: 'jianggan' },
-        { label: '拱墅区', value: 'gongshu' },
-        { label: '西湖区', value: 'xihu' },
-        { label: '滨江区', value: 'binjiang' },
-        { label: '萧山区', value: 'xiaoshan' }
-      ]
-    }
-    return [];
   })
 
   const columns = reactive([
@@ -81,11 +72,11 @@
       el: 'Textarea',
       placeholder: '输入项目描述',
       isShow: {
-        // 项目描述在选中项目类型为project1, project2的时候展示
         relyOn: {
+          // 项目类型的field为projectType，值为project1或project2展示项目描述
           projectType: ['project1', 'project2'],
-        }
-      }
+        },
+      },
     },
     {
       label: '省',
@@ -93,10 +84,13 @@
       el: 'Select',
       placeholder: '请选择省',
       span: 8,
-      options: [
-        { label: '江苏', value: 'jiangsu' },
-        { label: '浙江', value: 'zhejiang' }, 
-      ], 
+      onSelect: (value) => cityId.value = value,
+      optionFilterProp: 'label',
+      // fi=-1以国家开始查询， fid=4744为中国
+      getOptions: () => jsonp(`https://fts.jd.com/area/get?fid=4744`)
+        .then(res => res.json())
+        .then(res => res.map(item => ({ label : item.name, value: item.id })))
+        
     },
     {
       label: '市',
@@ -104,14 +98,16 @@
       el: 'Select',
       placeholder: '请选择市',
       span: 8,
+      onSelect: (value) => districtId.value = value,
+      optionFilterProp: 'label',
       isShow: {
         // 省有值时，市才进行显示
-        notIn: true,  // 取反
+        notIn: true, // 取反
         relyOn: {
           province: [undefined], // 市值undefined时
-        }
+        },
       },
-      options: city,
+      options: cityOptions,
     },
     {
       label: '区',
@@ -119,15 +115,34 @@
       el: 'Select',
       placeholder: '请选择区',
       span: 8,
+      optionFilterProp: 'label',
       isShow: {
         // 市有值时，区才进行显示
         notIn: true, // 取反
         relyOn: {
-          city: [undefined],// 市值undefined时
-        }
+          city: [undefined], // 市值undefined时
+        },
       },
-      options: district,
+      options: districtOptions,
     },
+    {
+      label: '性别',
+      field: 'sex',
+      el: 'Select',
+      placeholder: '请选择性别',
+      options: [
+        { label: '男(依赖外部条件跟选择男展示年龄)', value: 'male' },
+        { label: '女(依赖外部条件跟选择女不展示年龄)', value: 'female' },
+      ],
+      isShow: sexChecked,
+    },
+    // {
+    //   label: '年龄',
+    //   field: 'age',
+    //   el: 'InputNumber',
+    //   placeholder: '请输入年龄',
+    //   isShow: (sexChecked && checked),
+    // },
     {
       label: '',
       field: '',
@@ -158,6 +173,8 @@
             style: { marginLeft: '10px' },
             onClick: () => {
               formRef.value?.resetFields();
+              cityId.value = undefined
+              districtId.value = undefined
             },
           },
           '重置',

@@ -26,7 +26,6 @@ import {
   watch,
   type Component,
 } from 'vue'
-import { get } from 'http'
 
 // 处理 v-model:checked 绑定
 export const transformBinding = (Component: Component) => {
@@ -107,6 +106,15 @@ const extendComponentsOptions = (Component: Component, config?: any) => {
       onMounted(() => {
         fetchOptions()
       })
+
+      // 可扩展更新依赖的表单数据发生变化重新请求
+      // watch(
+      //   () => props?.context, 
+      //   (newValue, oldValue) =>  {
+      //     console.log(newValue, '000000')
+      //   },
+      //   { deep: true }
+      // )
 
       watch(
         () => props.options,

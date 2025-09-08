@@ -12,14 +12,14 @@
     <div style="margin-top: 15px">
       <a-button type="primary" @click="handleSearch" >查询</a-button>
       <a-button style="margin: 0 8px" @click="handleReset" >重置</a-button>
-      <a style="font-size: 12px" @click="expand = !expand">
+      <a style="font-size: 12px; text-decoration: none" @click="expand = !expand">
         <template v-if="expand">
           <UpOutlined />
         </template>
         <template v-else>
           <DownOutlined />
         </template>
-        高级搜索
+        {{ !expand ? '高级搜索' : '收起'}}
       </a>
     </div>
   </JsonForm>
