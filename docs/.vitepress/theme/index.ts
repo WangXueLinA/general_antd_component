@@ -1,6 +1,8 @@
 import Antd from 'ant-design-vue'
 import DefaultTheme from 'vitepress/theme'
 import Components from '../../../packages/index'
+import vHighlight from '../../../packages/directives/vHighlight'
+// import vTooltip from '../../../packages/directives/vTooltip.ts'
 import 'ant-design-vue/dist/reset.css'
 import './style/index.css'
 import './custom.css'
@@ -15,5 +17,7 @@ export default {
   enhanceApp: async ({ app, router, siteData }) => {
     app.use(Antd)
     app.use(Components) // 全局注册组件库的组件
+    app.directive('highlight', vHighlight)
+    // app.directive('tooltip', vTooltip)
   }
 }

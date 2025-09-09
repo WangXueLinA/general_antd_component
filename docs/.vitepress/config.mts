@@ -20,6 +20,13 @@ export default defineConfig({
           { text: 'CopyButton', link: '/examples/CopyButton' },
           { text: 'Operation', link: '/examples/Operation' }
         ]
+      },
+      {
+        text: '指令',
+        items: [
+          { text: 'v-tooltip', link: '/examples/VTooltip' },
+          { text: 'v-highlight', link: '/examples/VHighlight' }
+        ]
       }
     ],
     socialLinks: [
