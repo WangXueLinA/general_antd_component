@@ -27,6 +27,12 @@ export default defineConfig({
           { text: 'v-tooltip', link: '/examples/VTooltip' },
           { text: 'v-highlight', link: '/examples/VHighlight' }
         ]
+      },
+      {
+        text: 'hook',
+        items: [
+          { text: 'useTemplate', link: '/examples/Template' },
+        ]
       }
     ],
     socialLinks: [

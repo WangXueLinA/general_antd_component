@@ -299,6 +299,7 @@ export const componentsMap = {
 | isShow         | `Ref<boolean>` / [Dynamic](/examples/JsonForm/#my-dynamic)  | 表单项的显示隐藏                                                                                                       |
 | span         | number             | a-col 组件的 span 属性，用于控制表单项的布局个数，默认为 24                                                                                                   |
 | getOptions     | Promise.resolve([])    | 表单项有 options 配置的可以通过 getOptions 函数异步拿取 options 并将数据 return 为 Array<{label：'显示标题', value：'值'}> |
+| formItemProps  |  同form.Item配置   | 详见 [Ant Design Vue的form.Item](https://www.antdv.com/components/form-cn#form-item) |
 | 剩余表单 props | any                 | 表单项各自的属性的配置可直接作用到表单项上     | 
 
 
