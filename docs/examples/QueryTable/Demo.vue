@@ -1,33 +1,47 @@
 <template>
   <QueryTable
-    :top-action-buttons="topActionButtons"
-    :bottom-action-buttons="bottomActionButtons"
     :table-props="tableProps"
     :request-api="requestApi"
     :form-props="formProps"
     :format-params="formatParams"
     ref="queryTableRef"
-  />
-  <contextHolder />
+  >
+    <template #bottomExtra>
+      <a-button type="primary" :disabled="!selectedList.length" @click="handleAction1">底部按钮</a-button>
+      <a-upload
+        :customRequest="uploadFile"
+        :showUploadList="false"
+        v-model:file-list="fileList"
+        name="file"
+        action
+        accept=".xls , .xlsx"
+        :headers="{ authorization: 'authorization-text'}"
+      >
+        <a-button type="primary" style="margin-right: 20px" :disabled="optionFlag">上传文件</a-button>
+      </a-upload>
+    </template>
+  </QueryTable>
 </template>
 <script setup>
-  import { reactive, computed, useTemplateRef, h, ref } from 'vue';
-  import { Modal } from 'ant-design-vue'
+  import { reactive, useTemplateRef, ref } from 'vue';
   import { dateToStr } from './const'
-  const [modal, contextHolder] = Modal.useModal();
-  const queryTableRef = useTemplateRef('queryTableRef');
-  const selectedList = ref([]);
+  import { message } from 'ant-design-vue';
+  const queryTableRef = useTemplateRef('queryTableRef'); // 获取子组件实例
+  const selectedList = ref([]); // 选中的数据
+  const fileList = ref([]); // 上传的文件列表
+
 
   // 后端接口返回data有list集合展示dataSource，直接写api接口即可, 否则自己需拼凑
   const requestApi = (...args) => Promise.resolve({
     data: {
-      total: 5,
+      total: 6,
       list: [
-        { id: 1, customerPackageName: '套餐A', createdTime: '2023-01-01', status: '进行中' },
-        { id: 2, customerPackageName: '套餐B', createdTime: '2023-01-01', status: '进行中' },
-        { id: 3, customerPackageName: '套餐C', createdTime: '2023-01-01', status: '进行中' },
-        { id: 4, customerPackageName: '套餐D', createdTime: '2023-01-01', status: '进行中' },
-        { id: 5, customerPackageName: '套餐E', createdTime: '2023-01-01', disabled: true,  status: '已发布' },
+        { id1: 1111111, id2: 22222222, id3: 333333333, id4: 4444444, id5: 5555555555, id6: 66666666666666666 },
+        { id1: 1111111, id2: 22222222, id3: 333333333, id4: 4444444, id5: 5555555555, id6: 66666666666666666 },
+        { id1: 1111111, id2: 22222222, id3: 333333333, id4: 4444444, id5: 5555555555, id6: 66666666666666666 },
+        { id1: 1111111, id2: 22222222, id3: 333333333, id4: 4444444, id5: 5555555555, id6: 66666666666666666 },
+        { id1: 1111111, id2: 22222222, id3: 333333333, id4: 4444444, id5: 5555555555, id6: 66666666666666666 },
+        { id1: 1111111, id2: 22222222, id3: 333333333, id4: 4444444, id5: 5555555555, id6: 66666666666666666 },
       ],
     },
   });
@@ -46,6 +60,17 @@
       },
     };
   };
+
+  const uploadFile = ({ file }) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    // importTaocanExcel({
+    //   file,
+    //   type: flowType.value || 'CREATE',
+    //   flowBusinessId: flowBusinessId.value,
+    //   projectCode: projectCodeStore,
+    // })
+  }
 
   const formProps = reactive({
     layout: 'inline',
@@ -76,19 +101,11 @@
         ]
       }
     ],
-    otherColumns: [
-      {
-        label: '刷新',
-        type: 'primary',
-        onClick: () => queryTableRef.value.handleRefresh(),
-      },
-      {
-        label: '重置',
-        type: 'primary',
-        onClick: () => queryTableRef.value?.handleReset()
-      },
-    ]
   });
+
+  const handleAction1 = () => {
+    message.success(`选中了${selectedList.value.length}条数据`);
+  };
 
   const tableProps = ref({
     scroll: { x: 'max-content' },
@@ -102,63 +119,35 @@
     },
     columns: [
       {
-        dataIndex: 'id',
-        title: '客户',
+        dataIndex: 'id1',
+        title: '客户1',
         width: 140,
       },
       {
-        dataIndex: 'customerPackageName',
-        title: '套餐名',
+        dataIndex: 'id2',
+        title: '客户2',
         width: 140,
       },
       {
-        dataIndex: 'createdTime',
-        title: '创建时间',
+        dataIndex: 'id3',
+        title: '客户3',
         width: 140,
       },
       {
-        dataIndex: 'status',
-        title: '套餐状态',
+        dataIndex: 'id4',
+        title: '客户4',
+        width: 140,
+      },
+      {
+        dataIndex: 'id5',
+        title: '客户5',
+        width: 140,
+      },
+      {
+        dataIndex: 'id6',
+        title: '客户6',
         width: 140,
       },
     ],
   });
-
-  const topActionButtons = ref([
-    {
-      label: '顶部按钮1',
-      type: 'primary',
-      disabled: computed(() => !selectedList.value.length),
-      onClick: () => {
-        console.log(selectedList.value, '选中的数据');
-      },
-    },
-    {
-      label: '顶部按钮2',
-      type: 'primary',
-      onClick: () => {
-        console.log(selectedList.value, '选中的数据');
-      },
-    },
-  ]);
-
-  const bottomActionButtons = ref([
-    {
-      label: '底部按钮1',
-      danger: true,
-      type: "primary",
-      disabled: computed(() => !selectedList.value.length),
-      onClick: () => {
-        console.log(selectedList.value, '选中的数据');
-      },
-    },
-    {
-      label: '底部按钮2',
-      type: 'dashed',
-      danger: true,
-      onClick: () => {
-        console.log(selectedList.value, '选中的数据');
-      },
-    },
-  ]);
 </script>
