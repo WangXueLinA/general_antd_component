@@ -1,6 +1,6 @@
-import QueryTable from './index.vue';
+import QueryTable from '../index.vue';
 import { h, ref, reactive } from 'vue';
-import type { QueryTableProps } from './types';
+import type { QueryTableProps } from '../types';
 
 export const useQueryTable = (props: QueryTableProps) => {
   const queryTableRef = ref();

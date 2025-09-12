@@ -9,51 +9,59 @@
       v-if="!!formProps?.columns?.length"
     >
       <template #actions>
-        <a-button type="primary" @click="handleSearch" class="common-btn"
-          >搜索</a-button
-        >
-        <a-button type="primary" @click="handleReset" class="common-btn"
-          >重置</a-button
-        >
+        <a-button type="primary" @click="handleSearch" class="common-btn">搜索</a-button>
+        <a-button type="primary" @click="handleReset" class="common-btn">重置</a-button>
       </template>
     </JsonForm>
 
-  <div class="bottomExtra">
-    <slot name="bottomExtra" />
-    <div style="margin-left: auto;" class="bottomAction" @click="handleRefresh"><RedoOutlined /></div>
-    <a-popover title="表格列设置" trigger="click" placement="bottomRight" :arrow="false">
-      <template #content>
-        <a-table
-          :columns="setColumns"
-          :pagination="false"
-          :data-source="setTableData"
-          size="small"
-          bordered
-          row-key="dataIndex"
-          :customRow="customRow"
-        />
-      </template>
-      <div class="bottomAction"><SettingOutlined /></div>
-    </a-popover>
-  </div>
+    <div class="bottomExtra">
+      <slot name="bottomExtra" />
+      <div style="margin-left: auto" class="bottomAction" @click="handleRefresh"><RedoOutlined /></div>
+      <a-popover title="表格列设置" trigger="click" placement="bottomRight" :arrow="false">
+        <template #content>
+          <a-table
+            :columns="setColumns"
+            :pagination="false"
+            :data-source="setTableData"
+            size="small"
+            bordered
+            row-key="dataIndex"
+            :customRow="customRow"
+            style="width: 300px;"
+            :scroll="{ y: 200 }"
+          >
+            <template #headerCell="{ column }">
+              <template v-if="column.key === 'showColumn'">
+                <span>
+                  显示
+                  <a-checkbox
+                    v-model:checked="allColumnsVisible"
+                    @change="handleSelectAll"
+                    :indeterminate="isIndeterminate"
+                  />
+                </span>
+              </template>
+            </template>
+          </a-table>
+        </template>
+        <div class="bottomAction"><SettingOutlined /></div>
+      </a-popover>
+    </div>
 
     <!-- 数据表格 -->
     <a-table
       :data-source="tableData"
-      :columns="filteredColumns"
       :pagination="shouldShowPagination ? pagination : false"
       :loading="loading"
       size="middle"
       :row-key="tableProps.rowKey || 'id'"
       v-bind="tableBindings"
+      :columns="filteredColumns"
       @change="handleTableChange"
       @resizeColumn="handleResizeColumn"
     >
       <!-- 动态传递插槽 -->
-      <template
-        v-for="[slotName] in Object.entries($slots)"
-        #[slotName]="scope"
-      >
+      <template v-for="[slotName] in Object.entries($slots)" #[slotName]="scope">
         <slot :name="slotName" v-bind="scope" />
       </template>
     </a-table>
@@ -61,24 +69,13 @@
 </template>
 
 <script setup lang="ts">
-  import JsonForm from '../JsonForm/index.vue'
-  import {
-    ref,
-    reactive,
-    computed,
-    onMounted,
-    defineProps,
-    withDefaults,
-    useTemplateRef,
-    watch,
-    h
-  } from 'vue'
-  import { Checkbox, message, type TablePaginationConfig, type TableProps, type ColumnType } from 'ant-design-vue'
-  import { RedoOutlined, SettingOutlined, HolderOutlined } from '@ant-design/icons-vue'
-  import type { QueryTableProps } from './types'
-  import useDraggableTable from './useDraggableTable'
+  import JsonForm from '../JsonForm/index.vue';
+  import { ref, reactive, computed, onMounted, defineProps, withDefaults, useTemplateRef, watch, h } from 'vue';
+  import { Checkbox, message, type TablePaginationConfig, type TableProps } from 'ant-design-vue';
+  import { RedoOutlined, SettingOutlined, HolderOutlined } from '@ant-design/icons-vue';
+  import type { QueryTableProps } from './types';
+  import useDraggableTable from './hooks/useDraggableTable';
 
-  // 定义props
   const props = withDefaults(defineProps<QueryTableProps>(), {
     bottomActionButtons: () => [],
     formatParams: () => ({}),
@@ -95,34 +92,51 @@
       columns: [],
       defaultData: {},
     }),
-  })
+  });
 
-  const formInstance = useTemplateRef('formRef')
-  const formData = ref({})
+  const formInstance = useTemplateRef('formRef');
+  const formData = ref({});
 
-  // 为列数据添加类型定义，确保包含showColumn和fixed属性
-  const setTableData = ref<Array<ColumnType<any> & {
-    showColumn: boolean, 
-    fixed?: 'left' | 'right' | null
-  }>>([])
-  
-  // 初始化并监听表格列变化
+  const setTableData = ref<
+    Array<
+      any & {
+        showColumn: boolean;
+        fixed?: 'left' | undefined;
+      }
+    >
+  >([]);
+
   watch(
     () => props.tableProps.columns,
-    (newColumns) => {
-      // 初始化列配置，确保每个列都有showColumn属性
+    newColumns => {
       setTableData.value = (newColumns || []).map(col => ({
         ...col,
-        showColumn: col.showColumn !== false, // 默认显示
-        fixed: col.fixed || null
-      }))
+        showColumn: col.showColumn !== false,
+        fixed: col.fixed || undefined,
+      }));
     },
-    { immediate: true, deep: true }
-  )
+    { immediate: true, deep: true },
+  );
 
-  // 将ref对象传递给拖拽逻辑
-  const { customRow } = useDraggableTable(setTableData, true)
-  
+  const isIndeterminate = computed(() => {
+    const checkedCount = setTableData.value.filter(col => col.showColumn).length;
+    return checkedCount > 0 && checkedCount < setTableData.value.length;
+  });
+
+  const allColumnsVisible = computed(() => {
+    return setTableData.value.length > 0 && setTableData.value.every(col => col.showColumn);
+  });
+
+  const handleSelectAll = e => {
+    const checked = e.target.checked;
+    setTableData.value = setTableData.value.map(col => ({
+      ...col,
+      showColumn: checked,
+    }));
+  };
+
+  const { customRow } = useDraggableTable(setTableData, true);
+
   const state = reactive({
     tableData: [] as any[],
     pagination: {
@@ -134,24 +148,22 @@
       showTotal: (total: number) => `共 ${total} 条`,
     },
     loading: false,
-  })
+  });
 
   const handleResizeColumn: TableProps['onResizeColumn'] = (w, col) => {
-    col.width = w
-  }
+    col.width = w;
+  };
 
-  // 关键修改：计算属性，实时过滤需要显示的列
-  const filteredColumns = computed(() => {
-    return [...setTableData.value].filter(col => col.showColumn)
-  })
+  const filteredColumns = computed((pre) => {
+    return setTableData.value.filter(col => col.showColumn)
+  });
 
-  // 计算属性
   const formColumns = computed(() => {
-    const columns = (props.formProps.columns || [])?.map((column) => ({
+    const columns = (props.formProps.columns || [])?.map(column => ({
       ...column,
       key: column.field,
       component: column.el,
-    }))
+    }));
 
     if (columns.length) {
       return [
@@ -160,161 +172,124 @@
           field: 'actions',
           formItemProps: { wrapperCol: { span: 24, offset: 0 } },
         },
-      ]
+      ];
     }
 
-    return columns
-  })
+    return columns;
+  });
 
-  const formLayout = computed(() => props.formProps.layout || 'inline')
+  const formLayout = computed(() => props.formProps.layout || 'inline');
 
   const formBindings = computed(() => {
-    const { columns, defaultData, ...rest } = props.formProps
+    const { columns, defaultData, ...rest } = props.formProps;
     return {
       layout: formLayout.value,
       labelCol: { style: { width: '70px' } },
       ...rest,
-    }
-  })
+    };
+  });
 
   const tableBindings = computed(() => {
-    const { pagination, ...rest } = props.tableProps
-    return rest
-  })
+    const { pagination, ...rest } = props.tableProps;
+    return rest;
+  });
 
-  const tableData = computed(() => state.tableData)
-  const pagination = computed(() => state.pagination)
-  const loading = computed(() => state.loading)
+  const tableData = computed(() => state.tableData);
+  const pagination = computed(() => state.pagination);
+  const loading = computed(() => state.loading);
 
-  const shouldShowPagination = computed(
-    () => props.tableProps.pagination !== false
-  )
+  const shouldShowPagination = computed(() => props.tableProps.pagination !== false);
 
   const formatRequestParams = (params: Record<string, any>) => {
-    const { current, pageSize, ...businessParams } = params
+    const { current, pageSize, ...businessParams } = params;
 
     const formattedBusinessParams = props?.formatParams({
       ...formData.value,
       ...businessParams,
-    })
+    });
 
     return {
       ...props.formProps.defaultData,
       ...formattedBusinessParams,
-    }
-  }
+    };
+  };
 
   const loadData = async (params: Record<string, any> = {}) => {
-    state.loading = true
+    state.loading = true;
 
     try {
       if (typeof props.requestApi !== 'function') {
-        throw new Error('requestApi必须是一个函数')
+        throw new Error('requestApi必须是一个函数');
       }
 
       const pageParams = {
         current: params.current ?? state.pagination.current,
         pageSize: params.pageSize ?? state.pagination.pageSize,
-      }
+      };
 
       updatePagination({
         current: pageParams.current,
         pageSize: pageParams.pageSize,
-      })
+      });
 
-      const formattedParams = formatRequestParams(pageParams)
-      const result = await props.requestApi(formattedParams)
+      const formattedParams = formatRequestParams(pageParams);
 
-      state.tableData = result.data?.list || []
-      state.pagination.total = result.data?.total || 0
+      message.info(`提交数据: ${JSON.stringify(formattedParams)}`);
+
+      const result = await props.requestApi(formattedParams);
+
+      state.tableData = result.data?.list || [];
+      state.pagination.total = result.data?.total || 0;
     } catch (error) {
-      console.error('加载数据失败:', error)
+      console.error('加载数据失败:', error);
     } finally {
-      state.loading = false
+      state.loading = false;
     }
-  }
+  };
 
   const updatePagination = (pagination: Partial<TablePaginationConfig>) => {
-    Object.assign(state.pagination, pagination)
-  }
+    Object.assign(state.pagination, pagination);
+  };
 
   const handleSearch = () => {
-    loadData({ current: 1 })
-  }
+    loadData({ current: 1 });
+  };
 
   const handleReset = () => {
-    formInstance.value?.resetFields()
-    updatePagination({ current: 1, pageSize: 10 })
-    loadData({ current: 1, pageSize: 10 })
-  }
+    formInstance.value?.resetFields();
+    updatePagination({ current: 1, pageSize: 10 });
+    loadData({ current: 1, pageSize: 10 });
+  };
 
-  const handleTableChange: TableProps['onChange'] = (
-    pagination,
-    filters,
-    sorter
-  ) => {
+  const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
     const params = {
       current: pagination.current,
       pageSize: pagination.pageSize,
-    }
+    };
 
     if (sorter?.order) {
-      params['sorter'] = sorter.order === 'ascend' ? 'asc' : 'desc'
+      params['sorter'] = sorter.order === 'ascend' ? 'asc' : 'desc';
     }
 
     if (Object.keys(filters).length > 0) {
-      params['filters'] = filters
+      params['filters'] = filters;
     }
 
-    loadData(params)
-  }
+    loadData(params);
+  };
 
   const handleRefresh = async () => {
     try {
-      await loadData()
-      message.success('刷新成功')
+      await loadData();
+      message.success('刷新成功');
     } catch (error) {
-      console.error('刷新数据失败:', error)
+      console.error('刷新数据失败:', error);
     }
-  }
-
-  // 处理列显示状态变化 - 关键修复
-  const handleShowColumnChange = (checked: boolean, record: any) => {
-    // 查找对应的列并更新状态
-    const columnIndex = setTableData.value.findIndex(
-      col => col.dataIndex === record.dataIndex
-    )
-    
-    if (columnIndex !== -1) {
-      // 创建新数组触发响应式更新
-      const newColumns = [...setTableData.value]
-      newColumns[columnIndex] = {
-        ...newColumns[columnIndex],
-        showColumn: checked
-      }
-      setTableData.value = newColumns
-    }
-  }
-
-  // 处理列固定状态变化 - 关键修复
-  const handleFixedColumnChange = (checked: boolean, record: any) => {
-    const columnIndex = setTableData.value.findIndex(
-      col => col.dataIndex === record.dataIndex
-    )
-    
-    if (columnIndex !== -1) {
-      const newColumns = [...setTableData.value]
-      newColumns[columnIndex] = {
-        ...newColumns[columnIndex],
-        fixed: checked ? 'left' : null
-      }
-      setTableData.value = newColumns
-    }
-  }
+  };
 
   onMounted(() => {
-    loadData()
-  })
+    loadData();
+  });
 
   const setColumns = [
     {
@@ -322,82 +297,93 @@
       dataIndex: 'title',
       key: 'title',
       customRender: ({ text }) => {
-        return h('span', null, [h(HolderOutlined), text])
-      }
+        return h('span', null, [h(HolderOutlined), text]);
+      },
     },
     {
       title: '显示',
       dataIndex: 'showColumn',
       key: 'showColumn',
-      customRender: ({ text, record }) => {
+      customRender: ({ _, record }) => {
         return h(Checkbox, {
           checked: record.showColumn,
-          onChange: (e: any) => handleShowColumnChange(e.target.checked, record)
-        })
-      }
+          onChange: (e) => {
+            const columnIndex = setTableData.value.findIndex(col => col.dataIndex === record.dataIndex);
+            if (columnIndex !== -1) {
+              setTableData.value[columnIndex].showColumn = e.target.checked;
+            }
+          },
+        });
+      },
     },
     {
       title: '固定',
       dataIndex: 'fixed',
       key: 'fixed',
-      customRender: ({ text, record }) => {
+      customRender: ({ _, record }) => {
         return h(Checkbox, {
-          checked: record.fixed === 'left' || record.fixed === 'right',
-          onChange: (e: any) => handleFixedColumnChange(e.target.checked, record)
-        })
-      }
-    }
-  ]
+          checked: record.fixed === 'left',
+          onChange: (e) => {
+            const columnIndex = setTableData.value.findIndex(col => col.dataIndex === record.dataIndex);
+            if (columnIndex !== -1) {
+              setTableData.value[columnIndex].fixed = e.target.checked ? 'left' : undefined;
+            }
+          },
+        });
+      },
+    },
+  ];
 
   defineExpose({
     handleRefresh,
     handleReset,
     getFormValues: () => formData.value,
     getTableData: () => state.tableData,
-  })
+  });
 </script>
 
 <style scoped>
   .common-btn {
     margin-right: 25px;
   }
-  .query-topButton{
+  .query-topButton {
     margin-bottom: 20px;
   }
-  .query-bottomButton{
+  .query-bottomButton {
     margin-top: 20px;
   }
 
-  .bottomExtra{
+  .bottomExtra {
     display: flex;
     gap: 10px;
     margin-top: 20px;
   }
 
-  .bottomAction{
+  .bottomAction {
     width: 32px;
     height: 32px;
     line-height: 32px;
     text-align: center;
+    background-color: #eee;
+    border-radius: 4px;
   }
 
-  .bottomAction:hover{
+  .bottomAction:hover {
     cursor: pointer;
     background-color: #ccc;
     border-radius: 4px;
   }
 
   :deep(.ant-table-tbody > tr.target > td) {
-    border-top: 1px solid #409eff; 
+    border-top: 1px solid #409eff;
   }
-  
+
   /* 拖拽时的样式反馈 */
   :deep(.ant-table-tbody > tr.dragging) {
     background-color: #e6f7ff;
   }
-  
+
   :deep(.ant-table-tbody > tr.over) {
     background-color: #fffbe6;
   }
 </style>
-    
