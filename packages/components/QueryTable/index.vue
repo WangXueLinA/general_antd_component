@@ -162,7 +162,6 @@
     const columns = (props.formProps.columns || [])?.map(column => ({
       ...column,
       key: column.field,
-      component: column.el,
     }));
 
     if (columns.length) {

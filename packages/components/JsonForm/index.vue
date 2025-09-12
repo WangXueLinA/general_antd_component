@@ -30,27 +30,11 @@
     unref
   } from 'vue';
   import { componentsMap } from './registerForm';
-  import type { FormItem } from './types';
-  import type { FormProps, FormInstance } from 'ant-design-vue';
-
-  export interface JsonFormProps extends Omit<FormProps, 'model'> {
-    columns?: FormItem[];
-    span?: number;
-  }
-
-  export interface FormItemWithDependency extends FormItem {
-    isShow?:
-      | boolean
-      | {
-          notIn?: boolean;
-          relation?: 'and' | 'or';
-          relyOn?: Record<string, any[]>;
-          external?: boolean;
-        };
-  }
+  import type { FormItem, JsonFormProps } from './types';
+  import type { FormInstance } from 'ant-design-vue';
 
   const props = withDefaults(defineProps<JsonFormProps>(), {
-    columns: [],
+    columns: () => [] as FormItem[],
     span: 24,
   });
 
@@ -62,7 +46,7 @@
     default: () => ({}),
   });
 
-  const shouldShowItem = (item: FormItemWithDependency): boolean => {
+  const shouldShowItem = (item: FormItem): boolean => {
     let isShow: boolean;
 
     if (typeof item.isShow === 'boolean') {

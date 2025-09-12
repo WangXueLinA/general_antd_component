@@ -1,32 +1,42 @@
-import type { TableProps, ButtonProps, FormProps as AntdFormProps } from 'ant-design-vue';
+import type { TableProps, FormProps as AntdFormProps, FormItemProps } from 'ant-design-vue';
+import { Component } from 'vue';
 
-export type QueryTableProps = {
-  topActionButtons?: Array<ButtonProps & { label: string; key?: string }>;
-  bottomActionButtons?: Array<ButtonProps & { label: string; key?: string }>;
-  formProps: FormProps;
-  tableProps: TableProps;
-  requestApi: (params: Record<string, any>) => Promise<any>;
-  formatParams?: (params: Record<string, any>) => Record<string, any>;
-};
+interface ShowExtends {
+  relyOn: { 
+    [k: string]: string[] 
+  },
+  relation?: 'and' | 'or'
+  notIn?: boolean
+  external?: boolean
+}
+
 export type FormColumn = {
   field: string;
-  el: string;
+  el: string | Component;
   label: string;
   span?: number;
-  [key: string]: any;
+  formItemProps?: FormItemProps;
+  isShow?: boolean | ShowExtends | undefined;
+  value?: any;
+  onChange?: (value: any, ...args: any[]) => void
+  [k: string]: any
 };
 
+export const defineJsonColumns = (
+  columns: Array<FormColumn>
+) => columns
+
 export type FormProps = {
-  columns: FormColumn[];
+  columns?: FormColumn[]| undefined ;
   defaultData?: Record<string, any>;
   layout?: string;
   labelCol?: AntdFormProps['labelCol'];
   wrapperCol?: AntdFormProps['wrapperCol'];
-  otherColumns?: ButtonConfig[];
 };
 
-export type ButtonConfig = {
-  label: string;
-  key?: string;
-  [key: string]: any;
+export type QueryTableProps = {
+  formProps: FormProps;
+  tableProps: TableProps;
+  requestApi: (params: Record<string, any>) => Promise<any>;
+  formatParams?: (params: Record<string, any>) => Record<string, any>;
 };
