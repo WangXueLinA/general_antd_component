@@ -9,32 +9,54 @@ export default defineConfig({
     logo: '/logo.webp',
     nav: [
       { text: '首页', link: '/' },
-      { text: '组件', link: '/examples/JsonForm' }
+      { text: '组件', link: '/examples/JsonForm' },
+      { text: 'js', link: '/js/object' },
+      { text: '对比', link: '/difference/equal' },
     ],
-    sidebar: [
-      {
-        text: '组件',
-        items: [
-          { text: 'JsonForm', link: '/examples/JsonForm' },
-          { text: 'QueryTable', link: '/examples/QueryTable' },
-          { text: 'CopyButton', link: '/examples/CopyButton' },
-          { text: 'Operation', link: '/examples/Operation' }
-        ]
-      },
-      {
-        text: '指令',
-        items: [
-          { text: 'v-tooltip', link: '/examples/VTooltip' },
-          { text: 'v-highlight', link: '/examples/VHighlight' }
-        ]
-      },
-      {
-        text: 'hook',
-        items: [
-          { text: 'useTemplate', link: '/examples/Template' },
-        ]
-      }
-    ],
+    sidebar: {
+      '/examples/': [
+        {
+          text: '组件',
+          items: [
+            { text: 'JsonForm', link: '/examples/JsonForm' },
+            { text: 'QueryTable', link: '/examples/QueryTable' },
+            { text: 'CopyButton', link: '/examples/CopyButton' },
+            { text: 'Operation', link: '/examples/Operation' }
+          ]
+        },
+        {
+          text: '指令',
+          items: [
+            { text: 'v-tooltip', link: '/examples/VTooltip' },
+            { text: 'v-highlight', link: '/examples/VHighlight' }
+          ]
+        },
+        {
+          text: 'hook',
+          items: [
+            { text: 'useTemplate', link: '/examples/Template' },
+          ]
+        }
+      ],
+      '/js/': [
+        {
+          text: '对象',
+          items: [
+            { text: '动态获取属性', link: '/js/object' }
+          ]
+        },
+      ],
+      '/difference/': [
+        {          
+          text: '相同点',
+          link: '/difference/equal',
+        },
+        {
+          text: '不同点',
+          link: '/difference/unEqual',
+        }
+      ]
+    },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/WangXueLinA/general_antd_component' }
     ],
