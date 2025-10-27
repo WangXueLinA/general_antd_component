@@ -1,71 +1,167 @@
-# react/vue不同
+# react/vue不同点
 
-核心思想不同
+## 核心思想不同
+
 Vue早期定位是尽可能的降低前端开发的门槛（这跟Vue作者是独立开发者也有关系）。所以Vue推崇灵活易用（渐进式开发体验），数据可变，双向数据绑定（依赖收集）。
 
-React早期口号是Rethinking Best Practices。背靠大公司Facebook的React，从开始起就不缺关注和用户，而且React想要做的是用更好的方式去颠覆前端开发方式（事实上跟早期jquery称霸前端，的确是颠覆了）。所以React推崇函数式编程（纯组件），数据不可变以及单向数据流。函数式编程最大的好处是其稳定性（无副作用）和可测试性（输入相同，输出一定相同），所以通常大家说的React适合大型应用，根本原因还是在于其函数式编程。
+React推崇函数式编程（纯组件），数据不可变以及单向数据流。函数式编程最大的好处是其稳定性（无副作用）和可测试性（输入相同，输出一定相同），所以通常大家说的React适合大型应用，根本原因还是在于其函数式编程。
+
+| 维度     | Vue                | React                               |
+| -------- | ------------------ | ----------------------------------- |
+| 哲学     | 渐进式框架         | 声明式组件化库                      |
+| 核心目标 | 低门槛、高集成     | 灵活性、自由组合                    |
+| 典型场景 | 快速开发中小型项目 | 复杂大型应用（如企业级/跨平台开发） |
+| 设计特点 | 官方提供完整技术栈 | 专注视图层，生态由社区驱动          |
 
 由于两者核心思想的不同，所以导致Vue和React许多外在表现不同（从开发层面看）。
 
-#1.1 核心思想不同导致写法差异
+## 语法与开发模式
+
 Vue推崇template（简单易懂，从传统前端转过来易于理解）、单文件vue。而且虽然Vue2.0以后使用了Virtual DOM，使得Vue也可以使用JSX（babel工具转换支持），但Vue官方依然首先推荐template，这跟Vue的核心思想和定位有一定关系。
 
-React推崇JSX、HOC、all in js。
+- 基于 HTML 的模板语法（.vue 单文件组件）
+- 指令系统（v-if, v-for, v-model）
+- 支持 JSX 但非主流用法
 
-#1.2 核心思想不同导致api差异
+```js
+<template>
+  <button @click="count++">{{ count }}</button>
+</template>
+```
+
+React：
+
+- 强制使用 JSX（JavaScript + HTML 混合语法）
+- 完全 JavaScript 表达视图逻辑
+
+```js
+// React JSX
+function Counter() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount((c) => c + 1)}>{count}</button>;
+}
+```
+
+## 核心思想不同导致api差异
+
 Vue定位简单易上手，基于template模板 + options API，所以不可避免的有较多的概念和api。比如template模板中需要理解slot、filter、指令等概念和api，options API中需要理解watch、computed（依赖收集）等概念和api。
 
 React本质上核心只有一个Virtual DOM + Diff算法，所以API非常少，知道setState就能开始开发了。
 
-#1.3 核心思想不同导致社区差异
-由于Vue定义简单易上手，能快速解决问题，所以很多常见的解决方案，是Vue官方主导开发和维护。比如状态管理库Vuex、路由库Vue-Router、脚手架Vue-CLI、Vutur工具等。属于那种大包大揽，遇到某类通用问题，只需要使用官方给出的解决方案即可。
 
-React只关注底层，上层应用解决方案基本不插手，连最基础的状态管理早期也只是给出flow单向数据流思想，大部分都丢给社区去解决。比如状态管理库方面，有redux、mobx、redux-sage、dva等一大堆（选择困难症犯了），所以这也造就了React社区非常繁荣。同时由于有社区做上层应用解决方案，所以React团队有更多时间专注于底层升级，比如花了近2年时间把底层架构改为Fiber架构，以及创造出React Hooks来替换HOC，Suspense等。 更多框架设计思想可看 尤雨溪 - 在框架设计中寻求平衡 (opens new window)。
+## 响应式原理对比
 
-#1.4 核心思想不同导致未来升级方向不同
-核心思想不同，决定了Vue和React未来不管怎么升级变化，Vue和React考虑的基本盘不变。
+| 机制       | Vue (v3)                | React                       |
+| ---------- | ----------------------- | --------------------------- |
+| 实现方式   | Proxy 数据劫持          | 虚拟 DOM + 手动状态更新     |
+| 更新粒度   | 组件级/属性级细粒度更新 | 组件级重新渲染              |
+| 副作用管理 | watch/watchEffect       | useEffect                   |
+| 性能优化   | 自动依赖跟踪            | 需手动优化（React.memo 等） |
 
-Vue依然会定位简单易上手（渐进式开发），依然是考虑通过依赖收集来实现数据可变。这点从Vue3核心更新内容可以看到：template语法基本不变、options api只增加了setup选项（composition api）、基于依赖收集（Proxy）的数据可变。更多Vue3具体更新内容可看笔者总结 Vue3设计思想 (opens new window)或者 尤雨溪 - 聊聊 Vue.js 3.0 Beta 官方直播 (opens new window)。
+## diff 算法
 
-React的函数式编程这个基本盘不会变。React核心思想，是把UI作为Basic Type，比如String、Array类型，然后经过render处理，转换为另外一个value（纯函数）。从React Hooks可以看出，React团队致力于组件函数式编程，（纯组件，无class组件），尽量减少副作用（减少this，this会引起副作用）。
+想象一下：你有一个玩具箱（DOM 树），里面堆满了玩具（节点）。现在你想按新顺序整理玩具，但不想全部重新摆一遍，而是尽量复用旧的玩具位置。Vue3 和 React 整理玩具的策略不同
 
-#2. 组件实现不同
-Vue源码实现是把options挂载到Vue核心类上，然后再new Vue({options})拿到实例（vue组件的script导出的是一个挂满options的纯对象而已）。所以options api中的this指向内部Vue实例，对用户是不透明的，所以需要文档去说明this.$slot、this.$xxx这些api。另外Vue插件都是基于Vue原型类基础之上建立的，这也是Vue插件使用Vue.install的原因，因为要确保第三方库的Vue和当前应用的Vue对象是同一个。
+vue3先看头和尾：
 
-React内部实现比较简单，直接定义render函数以生成VNode，而React内部使用了四大组件类包装VNode，不同类型的VNode使用相应的组件类处理，职责划分清晰明了（后面的Diff算法也非常清晰）。React类组件都是继承自React.Component类，其this指向用户自定义的类，对用户来说是透明的。
+- 看一眼最前面的玩具，如果新旧顺序一样（比如都是乐高），直接跳过不管。
+- 再看最后面的玩具，如果一样（比如都是积木），也跳过。
+- 中间的玩具再仔细处理。
 
-3. 响应式原理不同
-这个问题网上已经有许多优秀文章都详细讲解过，这里就不具体展开讲，对Vue3响应式原理有兴趣可以看笔者 Vue3响应式原理 (opens new window)(Vue2和Vue3响应式原理基本一致，都是基于依赖收集，不同的是Vue3使用Proxy)。
+贴标签找对应（key）：如果玩具上贴了唯一标签（比如“小明的乐高”），直接按标签快速找到新旧对应关系，复用旧位置。
 
-Vue
+只移动必要的玩具：中间的玩具如果大部分顺序没变（比如“小车、恐龙、飞机”变成“恐龙、飞机、小车”），Vue3 会找到最长不用动的那部分（恐龙 → 飞机），只移动剩下的（小车）。
 
-Vue依赖收集，自动优化，数据可变。
-Vue递归监听data的所有属性,直接修改。
-当数据改变时，自动找到引用组件重新渲染。
-React
-
-React基于状态机，手动优化，数据不可变，需要setState驱动新的State替换老的State。
-当数据改变时，以组件为根目录，默认全部重新渲染
-#4. diff算法不同
-两者流程思维上是类似的，都是基于两个假设（使得算法复杂度降为O(n)）：
-
-不同的组件产生不同的 DOM 结构。当type不相同时，对应DOM操作就是直接销毁老的DOM，创建新的DOM。
-同一层次的一组子节点，可以通过唯一的 key 区分。
-但两者源码实现上有区别：
-
-Vue基于snabbdom库，它有较好的速度以及模块机制。Vue Diff使用双向链表，边对比，边更新DOM。
-
-React主要使用diff队列保存需要更新哪些DOM，得到patch树，再统一操作批量更新DOM。
+结果：省时省力，动作最少。
 
 
-5. 事件机制不同
-Vue
+React按顺序一个个对比：
+
+- 不管头尾，直接从第一个玩具开始对比新旧顺序。
+- 如果发现第一个位置的新玩具（比如原本是乐高，现在变成积木），直接扔了旧的，放新的。
+
+依赖标签提示（key）：如果玩具贴了标签，React 能更快找到对应关系。
+
+但没标签的话，就按位置硬匹配，容易误判（比如把第二个玩具当成第一个）。
+
+可能多做无用功：如果中间插入一个新玩具（比如旧顺序是 A-B-C，新顺序是 A-D-B-C），React 会以为 B 变成了 D，C 变成了 B，导致删掉 B、C，创建 D、B、C。
+
+### 为啥会采用这种不同的方式?
+
+Vue 相信“大部分结构是固定的”，React 相信“结构可能是完全动态的”
+
+```js
+// Vue模板是声明式的，结构清晰固定
+<template>
+  <div>
+    <header>{{ title }}</header>
+    <ul>
+      <li v-for="item in list" :key="item.id">{{ item.text }}</li>
+    </ul>
+  </div>
+</template>
+```
+
+Vue 的模板在编译阶段就被分析完毕，框架知道哪里是静态内容（如`<header>`标签），哪里是动态内容（如 v-for 循环）。
+
+带来的优势：可以提前做优化（比如静态节点提升），运行时只需要关注变化的部分。
+
+```js
+function DynamicList({ items, layout }) {
+  return (
+    <div>
+      {layout === 'grid' ? (
+        <div className="grid">{items.map(renderItem)}</div>
+      ) : (
+        <ul className="list">{items.map(renderItem)}</ul>
+      )}
+    </div>
+  );
+}
+```
+
+JSX 本质是 JavaScript 的语法糖，可以随意嵌套逻辑（如三元表达式、map 循环）。React 可以随时根据数据变化生成完全不同的 DOM 结构。
+
+带来的灵活性：适合需要高度动态交互的场景（如拖拽生成界面、实时数据可视化），但需要开发者自己控制优化（如合理使用 key）。
+
+具体例子：列表渲染
+
+```js
+// vue 需要提前定义两种布局
+<template>
+  <div v-if="isHorizontal" class="horizontal-list">
+    <Item v-for="item in list" :key="item.id" />
+  </div>
+  <ul v-else class="vertical-list">
+    <Item v-for="item in list" :key="item.id" />
+  </ul>
+</template>
+
+
+// react
+function List({ items, isHorizontal }) {
+  // 可以动态选择容器标签
+  const Container = isHorizontal ? 'div' : 'ul';
+
+  return (
+    <Container className={isHorizontal ? 'horizontal' : 'vertical'}>
+      {items.map(item => (
+        <Item key={item.id} />
+      ))}
+    </Container>
+  );
+}
+```
+
+Vue 需要明确写出两种分支结构，React 却可以动态决定使用`<div>`还是`<ul>`作为容器，甚至容器类型可以是动态变量。
+
+## 事件机制不同
+Vue: 
 
 Vue原生事件使用标准Web事件
 Vue组件自定义事件机制，是父子组件通信基础
-Vue合理利用了snabbdom库的模块插件
-React
+
+React:
 
 React原生事件被包装，所有事件都冒泡到顶层document监听，然后在这里合成事件下发。基于这套，可以跨端使用事件机制，而不是和Web DOM强绑定。
 React组件上无事件，父子组件通信使用props
-#Vue 和 React源码流程图

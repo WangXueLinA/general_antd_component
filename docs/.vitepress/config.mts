@@ -11,7 +11,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '组件', link: '/examples/JsonForm' },
       { text: 'js', link: '/js/object' },
-      { text: 'react跟vue对比', link: 'https://wangxuelina.github.io/document/note/vue2#vue-%E5%92%8C-react-%E5%AF%B9%E6%AF%94' },
+      { text: 'react跟vue对比', link: '/difference/equal' },
     ],
     sidebar: {
       '/examples/': [
