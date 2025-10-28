@@ -165,3 +165,159 @@ React:
 
 React原生事件被包装，所有事件都冒泡到顶层document监听，然后在这里合成事件下发。基于这套，可以跨端使用事件机制，而不是和Web DOM强绑定。
 React组件上无事件，父子组件通信使用props
+
+## 数据更新机制不同
+
+一、基础更新机制对比
+
+React useState 更新机制
+状态更新：异步
+DOM 更新：异步
+
+```js
+import { useState, useEffect } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  
+  const handleClick = () => {
+    console.log('更新前:', count); // 0
+    
+    setCount(count + 1);
+    console.log('更新后立即获取:', count); // 0 (还是旧值)
+    
+    // 多个更新会被合并
+    setCount(prev => prev + 1);
+    setCount(prev => prev + 1);
+  };
+  
+  // 状态真正更新后触发
+  useEffect(() => {
+    console.log('状态已更新:', count);
+    console.log('DOM 已更新:', document.getElementById('count').textContent);
+  }, [count]);
+  
+  return <div id="count">{count}</div>;
+}
+```
+
+Vue 3 ref/reactive 更新机制
+状态更新：同步
+DOM 更新：异步
+
+```js
+<template>
+  <div id="count">{{ count }}</div>
+  <button @click="handleClick">Increment</button>
+</template>
+
+<script setup>
+import { ref, nextTick } from 'vue';
+
+const count = ref(0);
+
+const handleClick = async () => {
+  console.log('更新前:', count.value); // 0
+  
+  count.value = count.value + 1;
+  console.log('更新后立即获取:', count.value); // 1 (立即更新)
+  
+  // DOM 还未更新
+  console.log('DOM 当前值:', document.getElementById('count').textContent); // 0
+  
+  // 等待 DOM 更新完成
+  await nextTick();
+  console.log('DOM 更新后:', document.getElementById('count').textContent); // 1
+};
+</script>
+```
+
+二、setTimeout 场景下的行为
+React 在 setTimeout 中的表现
+
+```js
+import { useState, useEffect } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  
+  const handleTimeout = () => {
+    setTimeout(() => {
+      console.log('setTimeout 内 - 更新前:', count); // 0
+      
+      setCount(count + 1);
+      console.log('setTimeout 内 - 更新后:', count); // 0 (异步更新)
+      
+      // React 18 中，setTimeout 内的多个更新也会被批处理
+      setCount(prev => prev + 1);
+      setCount(prev => prev + 1);
+    }, 1000);
+  };
+  
+  useEffect(() => {
+    console.log('状态已更新:', count);
+  }, [count]);
+  
+  return (
+    <div>
+      <div id="count">{count}</div>
+      <button onClick={handleTimeout}>Start Timeout</button>
+    </div>
+  );
+}
+```
+
+React 18 之前 vs React 18：
+React 18 之前：setTimeout 内的更新不会被批处理
+React 18：setTimeout 内的更新会被批处理（默认开启自动批处理）
+
+
+Vue 3 在 setTimeout 中的表现
+
+```js
+<template>
+  <div id="count">{{ count }}</div>
+  <button @click="handleTimeout">Start Timeout</button>
+</template>
+
+<script setup>
+import { ref, nextTick } from 'vue';
+
+const count = ref(0);
+
+const handleTimeout = () => {
+  setTimeout(async () => {
+    console.log('setTimeout 内 - 更新前:', count.value); // 0
+    
+    count.value = count.value + 1;
+    console.log('setTimeout 内 - 更新后:', count.value); // 1 (同步更新)
+    
+    // DOM 还未更新
+    console.log('DOM 当前值:', document.getElementById('count').textContent); // 0
+    
+    await nextTick();
+    console.log('nextTick 后:', document.getElementById('count').textContent); // 1
+    
+    // 多个更新会被合并
+    count.value = count.value + 1;
+    count.value = count.value + 1;
+    console.log('多次更新后:', count.value); // 3
+    
+    await nextTick();
+    console.log('最终 DOM 值:', document.getElementById('count').textContent); // 3
+  }, 1000);
+};
+</script>
+```
+
+| 场景 | React useState | Vue 3 ref/reactive |
+|------|---------------|-------------------|
+| **状态更新** | 异步 | 同步 |
+| **DOM 更新** | 异步 | 异步 |
+| **setTimeout 内状态更新** | 异步 | 同步 |
+| **settimeout 内 DOM 更新** | 异步 | 异步 |
+| **settimeout 内批处理** | React 18 支持 | 自动合并 |
+| **闭包问题** | 存在 | 不存在 |
+| **获取最新状态** | 需要 useEffect 或函数式更新 | 直接访问 .value |
+
+> 说明：React 18 引入了自动批处理机制，在 setTimeout 等异步场景下也能批处理更新。Vue 3 的响应式系统基于 Proxy，状态更新是同步的，但 DOM 更新是异步的，通过 nextTick 可以等待 DOM 更新完成。
