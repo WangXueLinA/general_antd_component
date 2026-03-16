@@ -10,8 +10,6 @@ export default defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '组件', link: '/examples/JsonForm' },
-      { text: 'js', link: '/js/object' },
-      { text: 'react跟vue对比', link: '/difference/equal' },
     ],
     sidebar: {
       '/examples/': [
@@ -38,24 +36,6 @@ export default defineConfig({
           ]
         }
       ],
-      '/js/': [
-        {
-          text: '对象',
-          items: [
-            { text: '动态获取属性', link: '/js/object' }
-          ]
-        },
-      ],
-      '/difference/': [
-        {          
-          text: '相同点',
-          link: '/difference/equal',
-        },
-        {
-          text: '不同点',
-          link: '/difference/unEqual',
-        }
-      ]
     },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/WangXueLinA/general_antd_component' }
